@@ -9,7 +9,8 @@ const ClosetContainer = styled.div`
   max-width: 900px;
   margin: 0 auto;
   padding: 20px;
-  
+  background-color: #ffffff;
+  border-radius: 0px;
 `;
 
 const HeaderRow = styled.div`
@@ -17,18 +18,23 @@ const HeaderRow = styled.div`
   align-items: center;
   justify-content: space-between;
   margin-bottom: 20px;
+  width: 100%;
 `;
 
 const Title = styled.h2`
-  color: #2d2f92; /* A navy-ish color, adjust if needed */
+  color: #2d2f92; 
   margin: 0;
-  font-size: 32px;
-  font-weight: bold;
+  font-size: 40px;
   font-family: "Montserrat", sans-serif;
+  color: var(--Blue, #2E266E);
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  
 `;
 
 const EditButton = styled.button`
-  background-color: #2d2f92; /* Same navy-ish color */
+  background-color: #2E266E; /* Same navy-ish color */
   color: #fff;
   border: none;
   border-radius: 20px;
@@ -38,7 +44,7 @@ const EditButton = styled.button`
   font-family: Rubik;
 
   &:hover {
-    background-color: #1f2067; /* Darker hover color */
+    background-color: #5C53A0; /* Lighter hover color */
   }
 `;
 
@@ -50,8 +56,10 @@ const CategoryRow = styled.div`
 
 const CategoryLabel = styled.span`
   display: inline-block;
+  width: 87px;
+  height: 21px;
+  flex-shrink: 0;
   padding: 5px 10px;
-  border-radius: 4px;
   color: #fff;
   font-family: Inter, sans-serif; /* Using Inter font for category labels */
   font-size: 14px;
@@ -86,7 +94,11 @@ const ClosetItem = styled.div`
 
   justify-content: center;
   align-items: center;
+  text-align: left;
   color: #999;
+  
+
+  
 `;
 
 function Closet() {
@@ -100,11 +112,12 @@ function Closet() {
 
       
       <CategoryRow>
-        <CategoryLabel color="#F05A28">Outerwear</CategoryLabel>
-        <CategoryLabel color="#5BC236">Top</CategoryLabel>
-        <CategoryLabel color="#2D2F92">Bottom</CategoryLabel>
+        <CategoryLabel color="#C0392B">Outerwear</CategoryLabel>
+        <CategoryLabel color="#4C9A2A">Top</CategoryLabel>
+        <CategoryLabel color="#2d2f92">Bottom</CategoryLabel>
       </CategoryRow>
 
+      
       
       <ItemsContainer>
         <ItemsGrid>
@@ -119,5 +132,5 @@ function Closet() {
     </ClosetContainer>
   );
 }
-
+/*Need to edit Item container to take in image, and have appropriate tags  */
 export default Closet;
