@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@fontsource/inter": "^5.2.5",
     "@fontsource/montserrat": "^5.2.5",
     "@fontsource/rubik": "^5.2.5",
     "@testing-library/dom": "^10.4.0",
@@ -41,5 +42,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "lato-font": "^3.0.0"
   }
 }
