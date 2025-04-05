@@ -17,8 +17,7 @@ function Home() {
         <Upload />
         <Closet />
           </div>
-          <StyleSelection/>
-          
+          <StyleSelection/> 
     </div>
   );
 }
