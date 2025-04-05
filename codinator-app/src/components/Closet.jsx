@@ -1,12 +1,15 @@
 import React from "react";
 import styled from "styled-components";
+import "@fontsource/montserrat/700.css"; // Importing Montserrat font for styling
+import "@fontsource/rubik"; // Importing Rubik font for bold text
+import "@fontsource/inter"; // Importing Lato font for category labels
 
 const ClosetContainer = styled.div`
   width: 100%;
   max-width: 900px;
   margin: 0 auto;
   padding: 20px;
-  font-family: "Arial", sans-serif;
+  
 `;
 
 const HeaderRow = styled.div`
@@ -21,6 +24,7 @@ const Title = styled.h2`
   margin: 0;
   font-size: 32px;
   font-weight: bold;
+  font-family: "Montserrat", sans-serif;
 `;
 
 const EditButton = styled.button`
@@ -31,6 +35,7 @@ const EditButton = styled.button`
   padding: 10px 20px;
   cursor: pointer;
   font-size: 14px;
+  font-family: Rubik;
 
   &:hover {
     background-color: #1f2067; /* Darker hover color */
@@ -48,6 +53,7 @@ const CategoryLabel = styled.span`
   padding: 5px 10px;
   border-radius: 4px;
   color: #fff;
+  font-family: Inter, sans-serif; /* Using Inter font for category labels */
   font-size: 14px;
   font-weight: 600;
   ${({ color }) => `
@@ -76,6 +82,8 @@ const ClosetItem = styled.div`
   background-color: #f5f5f5;
   border-radius: 4px;
   display: flex;
+  font-family: Inter, sans-serif; /* Using Inter font for category labels */
+
   justify-content: center;
   align-items: center;
   color: #999;
