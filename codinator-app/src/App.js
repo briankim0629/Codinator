@@ -8,7 +8,7 @@ import './App.css';
 function App() {
   return (
     <div className="App"
-      style={{backgroundColor: "#e8e8e8"}}> 
+      style={{}}> 
       <Home /> {/* Render the Home component directly */}
     </div>
   );

@@ -1,40 +1,117 @@
 import React from "react";
 import styled from "styled-components";
-import "@fontsource/montserrat/700.css"; // Importing Montserrat font
-
 
 const ClosetContainer = styled.div`
-  flex: 1;
-  background: #fff;
-  padding: 1rem;
-  border-radius: 4px;
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: "Arial", sans-serif;
 `;
 
-const ClosetHeading = styled.h3`
+const HeaderRow = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+`;
 
-  font-family: 'Montserrat', sans-serif;
-  color: blue;
-  `
+const Title = styled.h2`
+  color: #2d2f92; /* A navy-ish color, adjust if needed */
+  margin: 0;
+  font-size: 32px;
+  font-weight: bold;
+`;
 
+const EditButton = styled.button`
+  background-color: #2d2f92; /* Same navy-ish color */
+  color: #fff;
+  border: none;
+  border-radius: 20px;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-size: 14px;
 
+  &:hover {
+    background-color: #1f2067; /* Darker hover color */
+  }
+`;
 
-function Closet ({ items })  {
+const CategoryRow = styled.div`
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+`;
+
+const CategoryLabel = styled.span`
+  display: inline-block;
+  padding: 5px 10px;
+  border-radius: 4px;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  ${({ color }) => `
+    background-color: ${color};
+  `}
+`;
+
+const ItemsContainer = styled.div`
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  overflow-y: auto;
+  max-height: 400px; /* Adjust as needed */
+`;
+
+const ItemsGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* 3 columns, adjust as needed */
+  gap: 20px;
+`;
+
+// Individual item placeholder
+const ClosetItem = styled.div`
+  width: 100%;
+  aspect-ratio: 1; /* Keeps the square shape; works in modern browsers */
+  background-color: #f5f5f5;
+  border-radius: 4px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #999;
+`;
+
+function Closet() {
   return (
-    <div className="closet-container">
-      <ClosetHeading>YOUR CLOSET</ClosetHeading>
-      <ClosetContainer>
-        {items && items.map((item, index) => (
-          <div className="closet-item" key={index}>
-            {item ? (
-              <img src={item} alt={`Closet Item ${index}`} />
-            ) : (
-              <div className="placeholder">Empty</div>
-            )}
-          </div>
-        ))}
-      </ClosetContainer>
-    </div>
+    <ClosetContainer>
+      {/* Header with title and edit button */}
+      <HeaderRow>
+        <Title>YOUR CLOSET</Title>
+        <EditButton>Edit Closet</EditButton>
+      </HeaderRow>
+
+      {/* Category labels (Outerwear, Top, Bottom) */}
+      <CategoryRow>
+        <CategoryLabel color="#F05A28">Outerwear</CategoryLabel>
+        <CategoryLabel color="#5BC236">Top</CategoryLabel>
+        <CategoryLabel color="#2D2F92">Bottom</CategoryLabel>
+      </CategoryRow>
+
+      {/* Scrollable items container */}
+      <ItemsContainer>
+        <ItemsGrid>
+          {/* Just placeholders for now. Replace with real items if you like */}
+          <ClosetItem>Outerwear</ClosetItem>
+          <ClosetItem>Top</ClosetItem>
+          <ClosetItem>Bottom</ClosetItem>
+          <ClosetItem>Outerwear</ClosetItem>
+          <ClosetItem>Top</ClosetItem>
+          <ClosetItem>Bottom</ClosetItem>
+        </ItemsGrid>
+      </ItemsContainer>
+    </ClosetContainer>
   );
-};
+}
 
 export default Closet;

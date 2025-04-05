@@ -5,13 +5,33 @@ import "@fontsource/rubik/700.css";
 import styled from "styled-components";
 
 const ConfirmButton = styled.button`
-  background-color: black;
+  background-color: #000;
   color: white;
   height: 40px;
   width: 100px;
   border-radius: 20px;
   margin-right: 20px;
   margin-top: 10px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #333; /* Slightly lighter black on hover */
+  }
+`;
+
+const CancelButton = styled.button`
+  background-color: white;
+  color: black;
+  height: 40px;
+  width: 100px;
+  border-radius: 20px;
+  margin-right: 20px;
+  margin-top: 10px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #f0f0f0; /* Slightly darker white on hover */
+  }
 `;
 
 function Upload() {
@@ -135,20 +155,19 @@ function Upload() {
 
       <div style={{ display: "flex", justifyContent: "flex-start" }}>
         <ConfirmButton
-          style={{ background: "black", color: "white" }}
           onClick={handleUpload}
         >
           Upload
         </ConfirmButton>
-        <ConfirmButton
-          style={{ background: "white", color: "black" }}
+        <CancelButton
+          
           onClick={() => {
             setFile(null); // Clear the selected file
             setDragActive(false); // Reset drag active state
           }}
         >
           Cancel
-        </ConfirmButton>{" "}
+        </CancelButton>{" "}
       </div>
     </div>
   );
