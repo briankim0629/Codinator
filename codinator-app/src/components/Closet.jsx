@@ -70,7 +70,6 @@ const ItemsGrid = styled.div`
   gap: 20px;
 `;
 
-// Individual item placeholder
 const ClosetItem = styled.div`
   width: 100%;
   aspect-ratio: 1; /* Keeps the square shape; works in modern browsers */
@@ -85,23 +84,22 @@ const ClosetItem = styled.div`
 function Closet() {
   return (
     <ClosetContainer>
-      {/* Header with title and edit button */}
+      
       <HeaderRow>
         <Title>YOUR CLOSET</Title>
         <EditButton>Edit Closet</EditButton>
       </HeaderRow>
 
-      {/* Category labels (Outerwear, Top, Bottom) */}
+      
       <CategoryRow>
         <CategoryLabel color="#F05A28">Outerwear</CategoryLabel>
         <CategoryLabel color="#5BC236">Top</CategoryLabel>
         <CategoryLabel color="#2D2F92">Bottom</CategoryLabel>
       </CategoryRow>
 
-      {/* Scrollable items container */}
+      
       <ItemsContainer>
         <ItemsGrid>
-          {/* Just placeholders for now. Replace with real items if you like */}
           <ClosetItem>Outerwear</ClosetItem>
           <ClosetItem>Top</ClosetItem>
           <ClosetItem>Bottom</ClosetItem>
