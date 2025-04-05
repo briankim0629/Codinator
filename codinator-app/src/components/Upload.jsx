@@ -4,6 +4,12 @@ import "@fontsource/montserrat";
 import "@fontsource/rubik/700.css";
 import styled from "styled-components";
 
+const UploadContainer = styled.div`
+  width: 50%;
+  padding: 40px;
+  box-sizing: border-box;
+`;
+
 const ConfirmButton = styled.button`
   background-color: #000;
   color: white;
@@ -86,8 +92,10 @@ function Upload() {
       <div
         style={{
           boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)", // Add shadow
-          borderRadius: "20px", // Rounded corners
+          borderRadius: "15px", // Rounded corners
           border: "1px solid #ccc", // Light border
+          width: 535,
+          height: 435,
           backgroundColor: "white", // White background for the container
           padding: "20px", // Padding inside the container
         }}
@@ -112,7 +120,7 @@ function Upload() {
             border: "2px dashed #ccc",
             padding: "20px",
             textAlign: "center",
-            borderRadius: "10px",
+            borderRadius: "15px",
             cursor: "pointer",
             backgroundColor: "f0f0f0", // Light blue background when dragging over
           }}

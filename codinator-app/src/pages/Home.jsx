@@ -7,16 +7,17 @@ function Home() {
     <div>
       <div
         style={{
-          padding: "20px",
-          margin: "120",
           display: "flex",
-          justifyContent: "flex-start",
+          width: "100%",
           backgroundColor: "#e8e8e8",
+          minHeight: "70vh",
         }}
       >
-        <Upload />
-        <Closet />
-          </div>
+        <div style={{ display: "flex", width: "100%", backgroundColor: "#e8e8e8" }}>
+          <Upload />
+          <Closet />
+        </div>
+      </div>
           <StyleSelection/>
           
     </div>

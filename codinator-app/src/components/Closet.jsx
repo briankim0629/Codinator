@@ -5,12 +5,13 @@ import "@fontsource/rubik"; // Importing Rubik font for bold text
 import "@fontsource/inter"; // Importing Lato font for category labels
 
 const ClosetContainer = styled.div`
-  width: 100%;
-  max-width: 900px;
-  margin: 0 auto;
-  padding: 20px;
+  flex: 1;
   background-color: #ffffff;
-  border-radius: 0px;
+  padding: 40px;
+  box-sizing: border-box;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 `;
 
 const HeaderRow = styled.div`
@@ -55,18 +56,30 @@ const CategoryRow = styled.div`
 `;
 
 const CategoryLabel = styled.span`
-  display: inline-block;
-  width: 87px;
-  height: 21px;
-  flex-shrink: 0;
-  padding: 5px 10px;
+  display: flex;
+  align-items: center;     /* Vertically centers the text */
+  justify-content: flex-start;  /* Align text to the left */
+  min-width: 87px;
+  height: 32px;            /* Increase height for better balance */
+  padding: 0 12px;         /* Horizontal padding only */
   color: #fff;
-  font-family: Inter, sans-serif; /* Using Inter font for category labels */
+  font-family: Inter, sans-serif;
   font-size: 14px;
   font-weight: 600;
-  ${({ color }) => `
-    background-color: ${color};
-  `}
+  font-style: normal;
+  ${({ color }) => `background-color: ${color};`}
+`;
+const CategoryTag = styled.div`
+  position: absolute;
+  top: 10px;
+  left: -10px; /* negative left to push it out */
+  background-color: ${({ color }) => color || "#333"};
+  color: white;
+  font-family: Inter, sans-serif;
+  font-size: 12px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  z-index: 2;
 `;
 
 const ItemsContainer = styled.div`
@@ -85,20 +98,16 @@ const ItemsGrid = styled.div`
 `;
 
 const ClosetItem = styled.div`
+  position: relative;
   width: 100%;
-  aspect-ratio: 1; /* Keeps the square shape; works in modern browsers */
+  aspect-ratio: 1;
   background-color: #f5f5f5;
   border-radius: 4px;
   display: flex;
-  font-family: Inter, sans-serif; /* Using Inter font for category labels */
-
   justify-content: center;
   align-items: center;
-  text-align: left;
+  font-family: Inter, sans-serif;
   color: #999;
-  
-
-  
 `;
 
 function Closet() {
