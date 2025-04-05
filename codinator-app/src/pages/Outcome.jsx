@@ -1,9 +1,8 @@
 import React from "react";
 import styled from "styled-components";
 
-// Container with a white background
 const Container = styled.div`
-  background-color: #fff;
+  background-color: #e8e8e8;
   width: 100vw;
   min-height: 100vh;
   padding: 40px 20px;
@@ -13,14 +12,12 @@ const Container = styled.div`
   align-items: center;
 `;
 
-// Larger gray box
-const BigBox = styled.div`
+const RecommendBox = styled.div`
   width: 300px;
   height: 400px;
   background-color: #ccc; /* Gray */
 `;
 
-// Smaller gray box
 const SmallBox = styled.div`
   width: 200px;
   height: 250px;
@@ -30,7 +27,7 @@ const SmallBox = styled.div`
 const Header = styled.h1`
   font-size: 20px;
   color: #000;
-  margin-bottom: 40px;
+  margin-bottom: 20px;
   text-align: center;
 `;
 
@@ -41,12 +38,23 @@ const BoxesContainer = styled.div`
   align-items: center;
 `;
 
+const RecommendBoxContainer = styled.div`
+  display: flex;
+  gap: 5px;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column; /* Stack the header and box vertically */
+`;
+
 function Outcome() {
   return (
     <Container>
-      <Header>YOUR RECOMMENDED OUTFIT FOR TODAY IS...</Header>
       <BoxesContainer>
-        <BigBox />
+        <RecommendBoxContainer>
+          <Header>YOUR RECOMMENDED OUTFIT FOR TODAY IS...</Header>
+
+          <RecommendBox></RecommendBox>
+        </RecommendBoxContainer>
         <SmallBox />
       </BoxesContainer>
     </Container>

@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
+import { useNavigate } from "react-router";
 import styled from "styled-components";
 
 const Container = styled.div`
-display: flex;
-flex-direction: column;
+  display: flex;
+  flex-direction: column;
   background-color: #b7e6c1; /* Mint color */
   width: 100%;
   min-height: 30vh; /* or whatever height you want */
@@ -60,18 +61,43 @@ const StartButton = styled.button`
 `;
 
 function StyleSelection() {
+  const [selectedStyle, setSelectedStyle] = useState("");
+  const styles = ["Formal", "Casual", "Athletic", "Any"];
+  const navigate = useNavigate();
+
+  const handleStart = () => {
+    navigate("/outcome");
+    };
+    
+    const handleStyleChange = (style) => {
+        if (selectedStyle === style) {
+            setSelectedStyle(""); 
+            return;
+        }
+        setSelectedStyle(style);
+    }
+
   return (
     <Container>
       <Title>Choose your desired style</Title>
 
       <ButtonGroup>
-        <StyleButton>Formal</StyleButton>
-        <StyleButton>Casual</StyleButton>
-        <StyleButton>Athletic</StyleButton>
-        <StyleButton>Any</StyleButton>
+        {styles.map((style) => (
+          <StyleButton
+            key={style}
+            onClick={() => handleStyleChange(style)}
+            style={
+              selectedStyle === style
+                ? { backgroundColor: "#5c53a0", color: "#fff" }
+                : {}
+            }
+          >
+            {style}
+          </StyleButton>
+        ))}
       </ButtonGroup>
 
-      <StartButton>START</StartButton>
+      <StartButton onClick={handleStart}>START</StartButton>
     </Container>
   );
 }
