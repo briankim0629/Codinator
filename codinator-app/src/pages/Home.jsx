@@ -8,7 +8,7 @@ function Home() {
       <div
         style={{
           padding: "20px",
-          margin: "60",
+          margin: "120",
           display: "flex",
           justifyContent: "flex-start",
           backgroundColor: "#e8e8e8",

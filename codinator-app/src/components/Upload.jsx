@@ -97,9 +97,10 @@ function Upload() {
             fontFamily: "Rubik",
             fontWeight: "bold",
             marginLeft: "20px",
+          
           }}
         >
-          Drop your clothes Here
+          DROP YOUR CLOTHES HERE
         </h2>
         <div
           className={`upload-container ${dragActive ? "drag-active" : ""}`}
