@@ -34,7 +34,8 @@ def upload_multiple():
             # text = texts[i] if i < len(texts) else ""
             supabase.table("image_text").insert({
                 "image_url": public_url,
-                "metadata": supabase_object
+                "metadata": supabase_object,
+                "types": supabase_object["main_category"]
             }).execute()
 
             results.append({"file": file_name, "status": "uploaded"})
