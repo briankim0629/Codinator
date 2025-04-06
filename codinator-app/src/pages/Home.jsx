@@ -39,6 +39,7 @@ function Home() {
       </div>
           <StyleSelection/>
           
+
     </div>
   );
 }
