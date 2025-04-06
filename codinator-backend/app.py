@@ -1,11 +1,12 @@
 from flask import Flask, request, send_file, jsonify
 from my_supabase import supabase
 from image_analysis import get_text_description_and_attributes, preprocess_for_supabase
+from flask_cors import CORS  
 
-#from convert_heic_to_jpeg import convert_heic
 import io
 
 app = Flask(__name__)
+CORS(app)
 
 @app.route("/upload-multiple", methods=["POST"])
 def upload_multiple():
@@ -13,14 +14,12 @@ def upload_multiple():
         return jsonify({"error": "No files provided"}), 400
 
     files = request.files.getlist("files")
-    #texts = request.form.get("texts", "").splitlines()
 
     results = []
 
     for i, file in enumerate(files):
         file_name = file.filename
         file_bytes = file.read()
-        #file_bytes, file_name = convert_heic(file.filename, file_bytes)
         file_path = f"uploads/{file_name}"
 
         try:
@@ -31,7 +30,6 @@ def upload_multiple():
             description_and_attrs = get_text_description_and_attributes(public_url)
             supabase_object = preprocess_for_supabase(public_url, description_and_attrs)
 
-            # text = texts[i] if i < len(texts) else ""
             supabase.table("image_text").insert({
                 "image_url": public_url,
                 "metadata": supabase_object,
