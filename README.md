@@ -1,7 +1,7 @@
 ﻿# Codinator
 
 
-frontend: react, javascript
-backend: supabase
-APIs: python/flask, gemini
+frontend: react, javascript (Sophie Shin, Paul Kim)
+backend: supabase (Hayeon Yun)
+APIs: python/flask, Google Gemini (Brian Kim
 
