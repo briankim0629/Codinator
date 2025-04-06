@@ -22,7 +22,7 @@ function Home() {
             boxSizing: "borderbox",
           }}
         >
-          <Upload />
+          <Upload bucket={"uploads"} />
         </div>
 
         {/* Closet section (white) */}

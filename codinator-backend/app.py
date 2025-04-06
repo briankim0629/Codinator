@@ -14,13 +14,13 @@ def upload_multiple():
         return jsonify({"error": "No files provided"}), 400
 
     files = request.files.getlist("files")
-
+    bucket = request.form.get("bucket")
     results = []
 
     for i, file in enumerate(files):
         file_name = file.filename
         file_bytes = file.read()
-        file_path = f"uploads/{file_name}"
+        file_path = f"{bucket}/{file_name}"
 
         try:
             supabase.storage.from_("closet").upload(file_path, file_bytes)

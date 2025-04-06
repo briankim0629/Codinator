@@ -10,6 +10,7 @@ const Container = styled.div`
   min-height: 30vh; /* or whatever height you want */
   display: flex;
   align-items: center;
+  margin: 0 auto;
   padding: 20px;
   box-sizing: border-box;
 `;
@@ -67,20 +68,25 @@ function StyleSelection() {
 
   const handleStart = async () => {
     try {
-        await fetch(`${process.env.REACT_APP_BACKEND_URL}/setStyle`, {
+      const response = await fetch(
+        `${process.env.REACT_APP_BACKEND_URL}/setStyle`,
+        {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({ style: selectedStyle }),
-        });
-        setSelectedStyle(""); // Reset the selected style after starting
-        navigate("/outcome");
+        }
+      );
+      if (response.ok) {
+          setSelectedStyle(""); // Reset the selected style after starting
+          const outfitData = await response.json();
+        navigate("/outcome", { state: { outfits: outfitData } });
+      }
     } catch (error) {
       console.error("Error during style selection:", error);
       alert("An error occurred while starting. Please try again.");
       return;
-        
     } finally {
       // Optionally, you can reset the selected style here if needed
       setSelectedStyle("");
