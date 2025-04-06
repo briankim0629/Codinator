@@ -16,7 +16,7 @@ const Container = styled.div`
 const Title = styled.h2`
   font-family: Rubik, sans-serif;
   font-weight: medium;
-  margin-top: 80px;
+  margin-top: 10px;
   margin-bottom: 10px;
 `;
 
@@ -69,7 +69,7 @@ const Paragraph = styled.p`
 const ButtonGroup = styled.div`
   display: flex;
   justify-content: flex-start;
-  margin-top: 40px;
+  margin-top: 20px;
   color: #fff;
 `;
 
@@ -114,7 +114,7 @@ const CancelButton = styled.button`
   font-weight: 600;
 `;
 
-function Upload() {
+function Upload({ bucket }) {
   const [file, setFile] = useState(null);
   const [dragActive, setDragActive] = useState(false);
 
@@ -151,7 +151,8 @@ function Upload() {
       return;
     }
     const formData = new FormData();
-    formData.append("files", file);
+      formData.append("files", file);
+      formData.append("bucket", bucket); // Append the bucket name to FormData
     try {
       const response = await fetch(
         `${process.env.REACT_APP_BACKEND_URL}/upload-multiple`,

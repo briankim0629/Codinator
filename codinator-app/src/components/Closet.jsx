@@ -173,8 +173,8 @@ function Closet() {
   // Helper function to determine tag color based on the image type.
   const getTagColor = (type) => {
     if (type === "Outerwear") return "#C0392B";
-    if (type === "Top") return "#4C9A2A";
-    if (type === "Bottom") return "#2E266E";
+    if (type === "Tops") return "#4C9A2A";
+    if (type === "Bottoms") return "#2E266E";
     return "#333";
   };
 

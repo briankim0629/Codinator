@@ -1,6 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import "@fontsource/montserrat/700.css"; // Importing Montserrat font for styling
+import { useLocation } from "react-router";
+import Upload from "../components/Upload";
 
 const Container = styled.div`
   background-color: #e8e8e8;
@@ -91,6 +93,10 @@ const FitButton = styled.button`
 
 function Outcome() {
 
+    const location = useLocation();
+    const [modelUrl, setModelUrl] = useState(""); // State to hold the model URL if needed
+    const { recommendedOutfit } = location.state || {}; // Get the recommended outfit from the state
+
     const handleRetry = () => {
     }
 
@@ -115,6 +121,8 @@ function Outcome() {
           <FitButton onClick={handleTryFit}>See Fit</FitButton>
         </FitBoxContainer>
       </BoxesContainer>
+      <Upload bucket={"models"} />{" "}
+      {/* Keep the Upload component for uploading new outfits */}
     </Container>
   );
 }
