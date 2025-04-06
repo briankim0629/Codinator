@@ -27,7 +27,6 @@ const HeaderRow = styled.div`
 const Title = styled.h2`
   color: #2d2f92; 
   margin: 0;
-  margin-left: -30px;
   font-size: 40px;
   font-family: "Montserrat", sans-serif;
   color: var(--Blue, #2E266E);
@@ -74,6 +73,7 @@ const CategoryLabel = styled.span`
   font-family: Inter, sans-serif;
   font-size: 14px;
   font-weight: 600;
+    border-radius: 5px; /* Rounded corners for the label */
   font-style: normal;
   ${({ color }) => `background-color: ${color};`}
 `;
@@ -115,7 +115,7 @@ const ClosetItem = styled.div`
   aspect-ratio: 1;
   background-color: #f5f5f5;
   border-radius: 4px;
-  overflow: hidden; 
+  overflow: visible; 
   display: flex;
   justify-content: center;
   align-items: center;
