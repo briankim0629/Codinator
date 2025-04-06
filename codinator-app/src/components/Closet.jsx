@@ -1,14 +1,10 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { createClient } from "@supabase/supabase-js";
 
 import "@fontsource/montserrat/700.css"; // Importing Montserrat font for styling
 import "@fontsource/rubik"; // Importing Rubik font for bold text
 import "@fontsource/inter"; // Importing Lato font for category labels
 
-const supabaseUrl = process.env.REACT_APP_SUPABASE_URL;
-const supabaseKey = process.env.REACT_APP_SUPABASE_KEY;
-const supabase = createClient(supabaseUrl, supabaseKey);
 
 const ClosetContainer = styled.div`
   flex: 1;
@@ -145,21 +141,34 @@ function Closet() {
   ];
   */
   const [closetItems, setClosetItems] = useState([]);
+
   useEffect(() => {
-    // Replace with your actual backend endpoint URL that returns the closet items.
-    async function fetchImages() {
-      const { data, error } = await supabase
-        .from("image_text")
-        .select("*");
-      if (error) {
-        console.error("Error fetching images:", error);
-      } else {
-        console.log("Fetched images from Supabase:", data);
-        setClosetItems(data);
+    async function fetchClosetItems() {
+      const categories = ["Tops", "Bottoms", "Outerwear"];
+      try {
+        // Fetch items for each category from your backend
+        const fetchPromises = categories.map((category) =>
+          fetch(
+            `${process.env.REACT_APP_BACKEND_URL}/get-clothing-items?category=${category}`
+          ).then((res) => {
+            if (!res.ok) {
+              throw new Error(`Failed to fetch items for ${category}`);
+            }
+            return res.json();
+          })
+        );
+        const results = await Promise.all(fetchPromises);
+        // Flatten the array of arrays into one array
+        const combinedItems = results.flat();
+        console.log("Fetched closet items:", combinedItems);
+        setClosetItems(combinedItems);
+      } catch (error) {
+        console.error("Error fetching closet items:", error);
       }
     }
-    fetchImages();
+    fetchClosetItems();
   }, []);
+
 
   // Helper function to determine tag color based on the image type.
   const getTagColor = (type) => {
