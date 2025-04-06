@@ -44,6 +44,7 @@ const RecommendedTitle = styled.h1`
   color: #000;
   margin-bottom: 40px;
   margin-left: 60px;
+  text-align: left;
 `;
 
 // Container holding the three stacked boxes
@@ -61,7 +62,7 @@ const OutfitBoxes = styled.div`
 `;
 */
 const OutfitContainer = styled.div`
-  width: 600px;
+  width: 350px;
   background-color: #f0f0f0;
   margin-left: 60px;
   margin-right: 60px;
@@ -74,6 +75,7 @@ const OutfitContainer = styled.div`
   /* FIX #1B: Increase gap for more space between boxes */
   gap: 40px;
   margin-bottom: 20px;
+  
 `;
 
 // Each recommended item box
@@ -302,13 +304,13 @@ const FitButton = styled.button`
 */
 
 function Outcome() {
-    const location = useLocation();
-    console.log(location);
+    
   const [modelUrl, setModelUrl] = useState(""); // State to hold the model URL if needed
-  const { recommendedOutfit } = location.state; // Get the recommended outfit from the state
-    console.log(recommendedOutfit);
+const location = useLocation();
+const { outfits } = location.state || {};
+    console.log(outfits);
   useEffect(() => {
-    console.log("Recommended Outfit:", recommendedOutfit);
+    console.log("Recommended Outfit:", outfits);
   }, []);
 
   const handleRetry = () => {
@@ -318,7 +320,9 @@ function Outcome() {
 
   // Example: function for the “I WANT TO TRY IT ON” button
   const handleTryOn = () => {
-    console.log("Trying on the outfit...");
+      console.log("Trying on the outfit...");
+      setModelUrl(outfits["final_codi"]); // Set the model URL to the top outfit image
+  
   };
 
   return (
@@ -335,22 +339,28 @@ function Outcome() {
         <OutfitContainer>
           {/* You can map over an array if you have multiple items in recommendedOutfit */}
           <OutfitBox>
-            recommendedOutfit ? (
-            <img
-              src={recommendedOutfit["image_url-top"]}
-              alt={"Top Outfit"}
-              style={{ width: "100%", height: "100%", borderRadius: "6px" }}
-            />
-            ) : (<p>No outfit available</p>)
+            {outfits ? (
+              <img
+                src={outfits["image_url-top"]}
+                alt={"Top Outfit"}
+                style={{ width: "100%", height: "100%", borderRadius: "6px" }}
+              />
+            ) : (
+              <p>No outfit available</p>
+            )}
           </OutfitBox>
-          recommendedOutfit ? (
-          <img
-            src={recommendedOutfit["image_url-bottom"]}
-            alt={"Bottom Outfit"}
-            style={{ width: "100%", height: "100%", borderRadius: "6px" }}
-          />
-          ) : (<p>No outfit available</p>)
-          <OutfitBox />
+
+          <OutfitBox>
+            {outfits ? (
+              <img
+                src={outfits["image_url-bottom"]}
+                alt={"Bottom Outfit"}
+                style={{ width: "100%", height: "100%", borderRadius: "6px" }}
+              />
+            ) : (
+              <p>No outfit available</p>
+            )}
+          </OutfitBox>
         </OutfitContainer>
 
         <TryAgainButton onClick={handleRetry}>Try Again!</TryAgainButton>
@@ -382,7 +392,15 @@ function Outcome() {
         </GreenContainer>
 
         {/* Larger gray area for model preview */}
-        <ModelContainer />
+        <ModelContainer>
+          {modelUrl ? (
+            <img
+              src={modelUrl}
+              alt={"Sample Fit"}
+              style={{ width: "100%", height: "100%", borderRadius: "6px" }}
+            ></img>
+          ) : null}
+        </ModelContainer>
 
         {/* Possibly display an image or 3D model here */}
 
