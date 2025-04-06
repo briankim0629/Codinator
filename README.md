@@ -7,10 +7,15 @@ APIs: python/flask, Google Gemini (Brian Kim
 
 
 Steps to run the frontend:
-cd codinator-app \n
-npm i \n
-npm start \n
+
+cd codinator-app
+
+npm i
+
+npm start
 
 Steps to run the backend:
-cd codinator-backend \n
-python app.py \n
+
+cd codinator-backend
+
+python app.py
