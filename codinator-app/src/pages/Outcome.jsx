@@ -190,7 +190,6 @@ const ModelContainer = styled.div`
   background-color: #ccc;
   margin: 20px 60px;
   border-radius: 8px;
-  height: 300px; /* Adjust as needed */
 `;
 
 // “I WANT TO TRY IT ON” button at the bottom of the right column
@@ -306,12 +305,23 @@ const FitButton = styled.button`
 function Outcome() {
     
   const [modelUrl, setModelUrl] = useState(""); // State to hold the model URL if needed
-const location = useLocation();
-const { outfits } = location.state || {};
+  const location = useLocation();
+  const [modelUploaded, setModelUploaded] = useState(false);
+
+  const { outfits } = location.state || {};
     console.log(outfits);
   useEffect(() => {
     console.log("Recommended Outfit:", outfits);
   }, []);
+  useEffect(() => {
+    if (modelUploaded) { // When upload is successful
+      // FIX: Wait 5 seconds before calling handleTryOn
+      const timer = setTimeout(() => {
+        handleTryOn();
+      }, 5000);
+      return () => clearTimeout(timer); // Clean up the timer if component unmounts or modelUploaded changes
+    }
+  }, [modelUploaded]);
 
   const handleRetry = () => {
     // Your logic for re-running the outfit recommendation
@@ -319,10 +329,37 @@ const { outfits } = location.state || {};
   };
 
   // Example: function for the “I WANT TO TRY IT ON” button
-  const handleTryOn = () => {
-      console.log("Trying on the outfit...");
-      setModelUrl(outfits["final_codi"]); // Set the model URL to the top outfit image
+  const handleTryOn = async () => {
+    // Helper function to call the /wear-clothes endpoint
+    const fetchWearClothes = async () => {
+      try {
+        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/wear-clothes`, {
+          method: "POST",
+          // You can include additional request data here if needed
+        });
+        if (!response.ok) {
+          throw new Error("Failed to process wear-clothes endpoint");
+        }
+        const data = await response.json();
+        console.log("Wear clothes response:", data);
+        setModelUrl(data.final_codi); // Update the model URL state with the dressed image
+      } catch (error) {
+        console.error("Error calling wear-clothes:", error);
+        alert("Error trying on clothes. Please try again.");
+      }
+    };
   
+    // FIX: If the user has uploaded a model picture, wait 5 seconds before fetching.
+    if (modelUploaded) {
+      setTimeout(() => {
+        fetchWearClothes();
+      }, 5000);
+    } else {
+      // If no upload, call immediately (backend should return mannequin result)
+      //fetchWearClothes();
+      console.log("No model picture uploaded, using default mannequin image.");
+      setModelUrl(outfits["final_codi"]);  
+    }
   };
 
   return (
@@ -387,7 +424,10 @@ const { outfits } = location.state || {};
               bucket="models"
               variant="small"
               title="DROP YOUR PICTURE HERE"
-              
+              onUploadSuccess={(url) => {
+                setModelUrl(url);
+                setModelUploaded(true); // Mark that the model has been uploaded
+              }}
             />
           </GreenUpload>
         </GreenContainer>
