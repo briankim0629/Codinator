@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import drop from "./drop.png";
 import "@fontsource/montserrat";
 import "@fontsource/rubik/700.css";
@@ -18,7 +18,6 @@ const Title = styled.h2`
   font-weight: medium;
   margin-top: 80px;
   margin-bottom: 10px;
-
 `;
 
 // White upload box container
@@ -31,7 +30,7 @@ const UploadBox = styled.div`
   background-color: white;
   padding: 20px;
   margin-top: 10px; /* pushes box further down */
-  height: 400px;    /* increased height for a longer box */
+  height: 400px; /* increased height for a longer box */
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -50,7 +49,6 @@ const DragArea = styled.div`
   flex-direction: column;
   justify-content: center;
 
-
   align-items: center;
 `;
 
@@ -59,7 +57,6 @@ const DropImage = styled.img`
   width: 60px;
   height: 60px;
   margin-bottom: 0px;
-  
 `;
 
 // Paragraph styling
@@ -72,13 +69,8 @@ const Paragraph = styled.p`
 const ButtonGroup = styled.div`
   display: flex;
   justify-content: flex-start;
-  margin-top:40px;
-  color: #FFF;
-  
-
-
-  
-  
+  margin-top: 40px;
+  color: #fff;
 `;
 
 // Confirm and Cancel button styles
@@ -89,14 +81,13 @@ const ConfirmButton = styled.button`
   width: 120px;
   border-radius: 20px;
   margin-right: 20px;
-  
+
   text-align: center;
   font-family: Montserrat;
   font-size: 16px;
   font-style: normal;
   font-weight: 600;
-  
-  
+
   cursor: pointer;
   &:hover {
     background-color: #333;
@@ -111,7 +102,7 @@ const CancelButton = styled.button`
   border-radius: 20px;
   margin-right: 20px;
   cursor: pointer;
-  
+
   &:hover {
     background-color: #f0f0f0;
   }
@@ -152,14 +143,37 @@ function Upload() {
     }
   };
 
-  const handleUpload = () => {
+  // Reset drag state when the component unmounts)
+
+  const handleUpload = async () => {
     if (!file) {
       alert("Please select a file to upload.");
       return;
     }
-    setFile(null);
-    alert("File uploaded successfully!");
+    const formData = new FormData();
+    formData.append("files", file);
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_BACKEND_URL}/upload-multiple`,
+        {
+          method: "POST",
+          body: formData, // Append the file to FormData
+        }
+      );
+      if (!response.ok) {
+        throw new Error("Failed to upload file");
+      }
+      const data = await response.json();
+      setFile(null);
+      alert("File uploaded successfully!");
+    } catch (error) {
+      console.error("Error uploading file:", error);
+      alert("Failed to upload file. Please try again.");
+      setFile(null);
+      return;
+    }
   };
+  useEffect(() => {}, [file]);
 
   return (
     <Container>
@@ -176,7 +190,8 @@ function Upload() {
         >
           <DropImage src={drop} alt="Drop here" />
           <Paragraph>
-            Drag and drop your photo here, or click to browse. (jpg, jpeg, heic, png)
+            Drag and drop your photo here, or click to browse. (jpg, jpeg, heic,
+            png)
           </Paragraph>
           <input
             type="file"
@@ -185,7 +200,10 @@ function Upload() {
             style={{ display: "none" }}
             id="file-upload"
           />
-          <label htmlFor="file-upload" style={{ cursor: "pointer", color: "blue" }}>
+          <label
+            htmlFor="file-upload"
+            style={{ cursor: "pointer", color: "blue" }}
+          >
             Browse
           </label>
         </DragArea>
