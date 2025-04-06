@@ -6,7 +6,8 @@ import styled from "styled-components";
 
 // Container for the whole upload section
 const Container = styled.div`
-  max-width: 600px;
+  max-width: ${({ variant }) => (variant === "small" ? "300px" : "600px")}; 
+  
   margin: 0;
   padding: 20px;
   text-align: left;
@@ -16,8 +17,9 @@ const Container = styled.div`
 const Title = styled.h2`
   font-family: Rubik, sans-serif;
   font-weight: medium;
-  margin-top: 10px;
-  margin-bottom: 10px;
+  margin-top: ${({ variant }) => (variant === "small" ? "5px" : "10px")}; /* FIXED */
+  margin-bottom: ${({ variant }) => (variant === "small" ? "5px" : "10px")}; /* FIXED */
+  font-size: ${({ variant }) => (variant === "small" ? "18px" : "24px")}; /* FIXED */
 `;
 
 // White upload box container
@@ -26,25 +28,27 @@ const UploadBox = styled.div`
   border-radius: 15px;
   border: 1px solid #ccc;
   width: 100%;
-  max-width: 465px;
+  max-width: ${({ variant }) => (variant === "small" ? "250px" : "465px")}; /* FIXED: For small variant, width is 250px */
   background-color: white;
-  padding: 20px;
-  margin-top: 10px; /* pushes box further down */
-  height: 400px; /* increased height for a longer box */
+  padding: ${({ variant }) => (variant === "small" ? "10px" : "20px")}; /* FIXED: Reduced padding for small variant */
+  margin-top: 10px;
+  /* FIXED: Reduced height for small variant from '150px' to '80px' to make it shorter */
+  height: ${({ variant }) => (variant === "small" ? "130px" : "400px")};
   display: flex;
   flex-direction: column;
   justify-content: center;
 `;
 
+
 // Drag and drop area with a grey background
 const DragArea = styled.div`
   border: 2px dashed #ccc;
-  padding: 20px;
+  padding: ${({ variant }) => (variant === "small" ? "10px" : "20px")}; /* FIXED */
   text-align: center;
   border-radius: 15px;
   cursor: pointer;
   background-color: #f0f0f0; /* corrected color */
-  flex: 1;
+  flex: ${({ variant }) => (variant === "small" ? "0" : "1")};
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -54,22 +58,23 @@ const DragArea = styled.div`
 
 // Image styling
 const DropImage = styled.img`
-  width: 60px;
-  height: 60px;
+  width: ${({ variant }) => (variant === "small" ? "40px" : "60px")}; /* FIXED */
+  height: ${({ variant }) => (variant === "small" ? "40px" : "60px")}; /* FIXED */
   margin-bottom: 0px;
 `;
 
 // Paragraph styling
 const Paragraph = styled.p`
   font-family: sans-serif;
-  margin-bottom: 10px;
+  margin-bottom: ${({ variant }) => (variant === "small" ? "5px" : "10px")}; /* FIXED */
+  font-size: ${({ variant }) => (variant === "small" ? "10px" : "14px")}; /* FIXED */
 `;
 
 // Button group container
 const ButtonGroup = styled.div`
   display: flex;
   justify-content: flex-start;
-  margin-top: 20px;
+  margin-top: ${({ variant }) => (variant === "small" ? "10px" : "20px")}; /* FIXED */
   color: #fff;
 `;
 
@@ -77,14 +82,14 @@ const ButtonGroup = styled.div`
 const ConfirmButton = styled.button`
   background-color: #000;
   color: white;
-  height: 40px;
-  width: 120px;
+  height: ${({ variant }) => (variant === "small" ? "35px" : "40px")}; /* FIXED */
+  width: ${({ variant }) => (variant === "small" ? "100px" : "120px")}; /* FIXED */
   border-radius: 20px;
   margin-right: 20px;
 
   text-align: center;
   font-family: Montserrat;
-  font-size: 16px;
+  font-size: ${({ variant }) => (variant === "small" ? "14px" : "16px")}; /* FIXED */
   font-style: normal;
   font-weight: 600;
 
@@ -97,8 +102,8 @@ const ConfirmButton = styled.button`
 const CancelButton = styled.button`
   background-color: white;
   color: black;
-  height: 40px;
-  width: 120px;
+  height: ${({ variant }) => (variant === "small" ? "35px" : "40px")}; /* FIXED */
+  width: ${({ variant }) => (variant === "small" ? "100px" : "120px")}; /* FIXED */
   border-radius: 20px;
   margin-right: 20px;
   cursor: pointer;
@@ -109,12 +114,12 @@ const CancelButton = styled.button`
 
   text-align: center;
   font-family: Montserrat;
-  font-size: 16px;
+  font-size: ${({ variant }) => (variant === "small" ? "14px" : "16px")}; /* FIXED */
   font-style: normal;
   font-weight: 600;
 `;
 
-function Upload({ bucket }) {
+function Upload({ bucket, variant, title }) {
   const [file, setFile] = useState(null);
   const [dragActive, setDragActive] = useState(false);
 
@@ -177,20 +182,21 @@ function Upload({ bucket }) {
   useEffect(() => {}, [file]);
 
   return (
-    <Container>
+    <Container variant={variant}>
       {/* Header moved outside of the white upload box */}
-      <Title>DROP YOUR CLOTHES HERE</Title>
+      <Title variant={variant}>{title || "DROP YOUR CLOTHES HERE"}</Title>
 
-      <UploadBox>
+      <UploadBox variant={variant}>
         <DragArea
+          variant={variant}
           className={`upload-container ${dragActive ? "drag-active" : ""}`}
           onDragEnter={handleDrag}
           onDragOver={handleDrag}
           onDragLeave={handleDrag}
           onDrop={handleDrop}
         >
-          <DropImage src={drop} alt="Drop here" />
-          <Paragraph>
+          <DropImage variant={variant} src={drop} alt="Drop here" />
+          <Paragraph variant={variant}>
             Drag and drop your photo here, or click to browse. (jpg, jpeg, heic,
             png)
           </Paragraph>
@@ -211,14 +217,15 @@ function Upload({ bucket }) {
       </UploadBox>
 
       {file && (
-        <div style={{ marginTop: "20px" }}>
+        <div style={{ marginTop: variant === "small" ? "10px" : "20px" }}>
           <p>Selected File: {file.name}</p>
         </div>
       )}
 
-      <ButtonGroup>
-        <ConfirmButton onClick={handleUpload}>Upload</ConfirmButton>
+      <ButtonGroup variant={variant}>
+        <ConfirmButton variant={variant} onClick={handleUpload}>Upload</ConfirmButton>
         <CancelButton
+          variant={variant}
           onClick={() => {
             setFile(null);
             setDragActive(false);
