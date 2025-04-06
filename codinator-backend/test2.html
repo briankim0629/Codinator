@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Test Outfit Recommendation</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 40px;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+    }
+    #result {
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Outfit Recommender</h1>
+  <p>Click the button to get a top and bottom clothing recommendation.</p>
+  <button id="recBtn">Get Recommendation</button>
+  <div id="result"></div>
+
+  <script>
+    document.getElementById("recBtn").addEventListener("click", function () {
+      const resultDiv = document.getElementById("result");
+      resultDiv.innerHTML = "⏳ Getting recommendation...";
+
+    fetch("http://127.0.0.1:5000/get-rec?TEMPORARY=test", {
+        method: "POST"
+    })
+      .then(async response => {
+        const data = await response.json();
+        if (response.ok) {
+          resultDiv.innerHTML = `
+            ✅ Recommendation received!<br><br>
+            <strong>Top:</strong><br>
+            <img src="${data.image_url_top}" alt="Top" width="200"><br>
+            <a href="${data.image_url_top}" target="_blank">View Full Image</a><br><br>
+
+            <strong>Bottom:</strong><br>
+            <img src="${data.image_url_bottom}" alt="Bottom" width="200"><br>
+            <a href="${data.image_url_bottom}" target="_blank">View Full Image</a><br>
+          `;
+        } else {
+          resultDiv.innerHTML = `❌ Server error: <code>${data.message}</code>`;
+        }
+      })
+      .catch(error => {
+        console.error("Fetch error:", error);
+        resultDiv.innerHTML = "❌ Network error: " + error.message;
+      });
+    });
+  </script>
+</body>
+</html>
