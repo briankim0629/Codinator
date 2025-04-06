@@ -31,6 +31,8 @@ const LeftColumn = styled.div`
 const RightColumn = styled.div`
   flex: 7;
   display: flex;
+  /* FIX #2A: Center children horizontally */
+  align-items: center; 
   flex-direction: column;
   box-sizing: border-box;
   background-color: #f8f8f8;
@@ -66,18 +68,20 @@ const OutfitContainer = styled.div`
   margin-left: 60px;
   margin-right: 60px;
   border-radius: 8px;
-  padding: 20px;
+  /* FIX #1A: Increase padding for more space around edges */
+  padding: 40px; 
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  gap: 10px; /* space between item boxes */
+  /* FIX #1B: Increase gap for more space between boxes */
+  gap: 40px; 
   margin-bottom: 20px;
 `;
 
 // Each recommended item box
 const OutfitBox = styled.div`
   width: 100%;
-  height: 200px;
+  aspect-ratio: 1;
   background-color: #ffffff;
   border-radius: 6px;
   border: 1px solid #ccc;
@@ -181,8 +185,9 @@ const ModelSection = styled.div`
 */
 // Larger gray box for model preview
 const ModelContainer = styled.div`
-  width: 60%; /* FIXED: narrower horizontally */
-  height: 1000px; /* FIXED: longer vertically */
+  /* FIX #2B: Make it taller and center it horizontally */
+  width: 60%;
+  height: 500px; /* increased from 300px */
   background-color: #ccc;
   margin: 20px 60px;
   border-radius: 8px;
