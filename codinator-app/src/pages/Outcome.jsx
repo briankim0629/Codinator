@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import "@fontsource/montserrat/700.css"; // Importing Montserrat font for styling
-import { useLocation } from "react-router";
+import { useLocation } from "react-router-dom";
 import Upload from "../components/Upload";
 
 import "@fontsource/montserrat/700.css"; // Montserrat for headers
@@ -302,9 +302,14 @@ const FitButton = styled.button`
 */
 
 function Outcome() {
-  const location = useLocation();
+    const location = useLocation();
+    console.log(location);
   const [modelUrl, setModelUrl] = useState(""); // State to hold the model URL if needed
-  const { recommendedOutfit } = location.state || {}; // Get the recommended outfit from the state
+  const { recommendedOutfit } = location.state; // Get the recommended outfit from the state
+    console.log(recommendedOutfit);
+  useEffect(() => {
+    console.log("Recommended Outfit:", recommendedOutfit);
+  }, []);
 
   const handleRetry = () => {
     // Your logic for re-running the outfit recommendation
@@ -329,7 +334,22 @@ function Outcome() {
         {/* For now, it's just a placeholder */}
         <OutfitContainer>
           {/* You can map over an array if you have multiple items in recommendedOutfit */}
-          <OutfitBox />
+          <OutfitBox>
+            recommendedOutfit ? (
+            <img
+              src={recommendedOutfit["image_url-top"]}
+              alt={"Top Outfit"}
+              style={{ width: "100%", height: "100%", borderRadius: "6px" }}
+            />
+            ) : (<p>No outfit available</p>)
+          </OutfitBox>
+          recommendedOutfit ? (
+          <img
+            src={recommendedOutfit["image_url-bottom"]}
+            alt={"Bottom Outfit"}
+            style={{ width: "100%", height: "100%", borderRadius: "6px" }}
+          />
+          ) : (<p>No outfit available</p>)
           <OutfitBox />
         </OutfitContainer>
 
