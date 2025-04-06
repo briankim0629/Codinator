@@ -4,19 +4,27 @@ from google.genai import types
 import base64
 from dotenv import load_dotenv
 import os
+import requests
+import io
 
 import PIL.Image
-# from pillow_heif import register_heif_opener
-# register_heif_opener()
+from pillow_heif import register_heif_opener
+register_heif_opener()
 
 load_dotenv()
 
 client = genai.Client(api_key=os.getenv("SUPABASE_KEY2"))
 wardrobe = []
 
-def get_text_description_and_attributes(image):
+def get_text_description_and_attributes(image_url):
     # image = PIL.Image.open(img_location)
     
+    #if response.status_code != 200:
+    #    raise Exception(f"Failed to download image from URL: {image_url}")
+
+    response = requests.get(image_url)
+    image = PIL.Image.open(io.BytesIO(response.content))
+
     prompt = [
         """Analyze this clothing item and provide:
         1. A detailed description (2-3 sentences)
