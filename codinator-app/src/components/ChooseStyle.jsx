@@ -67,9 +67,12 @@ function StyleSelection() {
   const navigate = useNavigate();
 
   const handleStart = async () => {
-    try {
+      try {
+          if (!selectedStyle) {
+              setSelectedStyle('any');
+          }
       const response = await fetch(
-        `${process.env.REACT_APP_BACKEND_URL}/setStyle`,
+        `${process.env.REACT_APP_BACKEND_URL}/get-rec`,
         {
           method: "POST",
           headers: {
