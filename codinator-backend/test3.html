@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Upload Image to /upload-model</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 40px;
+    }
+    img {
+      max-width: 200px;
+      margin: 10px;
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <h2>Upload Image</h2>
+
+  <input type="file" id="fileInput" accept="image/*" multiple />
+  <button onclick="uploadImage()">Upload</button>
+
+  <div id="result"></div>
+
+  <script>
+    function uploadImage() {
+      const files = document.getElementById("fileInput").files;
+      if (!files.length) {
+        alert("Please select at least one image.");
+        return;
+      }
+
+      const formData = new FormData();
+      for (const file of files) {
+        formData.append("files", file);
+      }
+
+      fetch("http://127.0.0.1:5000/upload-model", {
+        method: "POST",
+        body: formData
+      })
+      .then(response => response.json())
+      .then(data => {
+        const resultDiv = document.getElementById("result");
+        resultDiv.innerHTML = "<h3>Upload Results:</h3>";
+
+        data.forEach(file => {
+          if (file.status === "uploaded") {
+            resultDiv.innerHTML += `
+              ✅ <strong>${file.file}</strong><br>
+              <img src="${file.url}" alt="${file.file}" /><br>
+              <a href="${file.url}" target="_blank">View Full Image</a><br><br>
+            `;
+          } else {
+            resultDiv.innerHTML += `❌ <strong>${file.file}</strong> - ${file.error}<br><br>`;
+          }
+        });
+      })
+      .catch(error => {
+        console.error("Upload failed:", error);
+        document.getElementById("result").innerText = "❌ Upload failed: " + error.message;
+      });
+    }
+  </script>
+</body>
+</html>

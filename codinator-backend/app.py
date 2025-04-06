@@ -12,23 +12,38 @@ register_heif_opener()
 app = Flask(__name__)
 CORS(app)
 
+def convert_heic_to_jpeg(file_bytes):
+    import PIL.Image
+    import io
+
+    image = PIL.Image.open(io.BytesIO(file_bytes)).convert("RGB")
+    buffer = io.BytesIO()
+    image.save(buffer, format="JPEG")
+    buffer.seek(0)
+    return buffer.read()
+
 @app.route("/upload-multiple", methods=["POST"])
 def upload_multiple():
     if "files" not in request.files:
         return jsonify({"error": "No files provided"}), 400
 
     files = request.files.getlist("files")
-    bucket = request.form.get("bucket")
+    #bucket = request.form.get("bucket")
     results = []
 
     for i, file in enumerate(files):
         file_name = file.filename
         file_bytes = file.read()
+
+        if file_name.lower().endswith(".heic"):
+            file_bytes = convert_heic_to_jpeg(file_bytes)
+            file_name = file_name.rsplit(".", 1)[0] + ".jpg"
+
         file_path = f"uploads/{file_name}"
 
         try:
-            supabase.storage.from_(bucket).upload(file_path, file_bytes)
-            public_url = supabase.storage.from_(bucket).get_public_url(file_path)
+            supabase.storage.from_("closet").upload(file_path, file_bytes)
+            public_url = supabase.storage.from_("closet").get_public_url(file_path)
 
             # Call Gemini model
             description_and_attrs = get_text_description_and_attributes(public_url)
@@ -60,6 +75,95 @@ def get_clothing_items():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
     
+@app.route("/upload-model", methods=["POST"])
+def upload_model():
+    if "files" not in request.files:
+        return jsonify({"error": "No files provided"}), 400
+
+    files = request.files.getlist("files")
+    #bucket = request.form.get("bucket")
+    results = []
+
+    for i, file in enumerate(files):
+        file_name = file.filename
+        file_bytes = file.read()
+
+        if file_name.lower().endswith(".heic"):
+            file_bytes = convert_heic_to_jpeg(file_bytes)
+            file_name = file_name.rsplit(".", 1)[0] + ".jpg"
+
+        file_path = f"uploads/{file_name}"
+
+        try:
+            supabase.storage.from_("models").upload(file_path, file_bytes)
+            public_url = supabase.storage.from_("models").get_public_url(file_path)
+
+            supabase.table("model_info").insert({
+                "model_url": public_url
+            }).execute()
+
+            results.append({"file": file_name, "status": "uploaded"})
+
+        except Exception as e:
+            results.append({"file": file_name, "status": "error", "error": str(e)})
+
+    return jsonify(results)
+
+@app.route("/wear-clothes", methods=["POST"])
+def wear_clothes():
+    person = (
+        supabase
+        .table("model_info")
+        .select("*")
+        .order("created_at", desc=True) 
+        .limit(1)
+        .execute()
+    )
+    clothes =  (
+        supabase
+        .table("codi_rec")
+        .select("*")
+        .order("created_at", desc=True) 
+        .limit(1)
+        .execute()
+    )
+    try: 
+        top_cloth = clothes.data[0].get('image_url-top')
+        bottom_cloth = clothes.data[0].get('image_url-bottom')
+        person_image = person.data[0].get('model_url')
+        dressed_up = dressup_time_human(top_cloth,bottom_cloth,person_image)
+
+        buffer = io.BytesIO()
+        dressed_up.save(buffer, format="JPEG")
+        buffer.seek(0)
+        img_bytes = buffer.read()
+
+        filename = f"dressed_{uuid.uuid4()}.jpg"
+        supabase.storage.from_("finalcodi").upload(filename, img_bytes, {"content-type": "image/jpeg"})
+
+        public_url = supabase.storage.from_("finalcodi").get_public_url(filename)
+
+        result = supabase.table("codi_rec").insert({
+            "image_url-top": top_cloth,
+            "image_url-bottom": bottom_cloth,
+            "final_codi": public_url,
+            "type": "human"
+        }).execute()
+
+
+        return jsonify({
+            "status": "success",
+            "image_url-top": top_cloth,
+            "image_url-bottom": bottom_cloth,
+            "final_codi": public_url,
+            "type": "human",
+            "inserted": result.data
+        })
+
+    except Exception as e:
+        traceback.print_exc()
+        return jsonify({"status": "error", "message": str(e)})
+
 
 @app.route("/get-rec", methods=["POST"])
 def get_rec():
@@ -87,7 +191,8 @@ def get_rec():
         result = supabase.table("codi_rec").insert({
             "image_url-top": top_url,
             "image_url-bottom": bottom_url,
-            "final_codi": public_url
+            "final_codi": public_url,
+            "type": "mannequin"
         }).execute()
 
 
@@ -96,12 +201,14 @@ def get_rec():
             "image_url-top": top_url,
             "image_url-bottom": bottom_url,
             "final_codi": public_url,
+            "type": "mannequin",
             "inserted": result.data
         })
 
     except Exception as e:
         traceback.print_exc()
-        return jsonify({"status": "error", "message": str(e)})    
+        return jsonify({"status": "error", "message": str(e)})
 
 if __name__ == "__main__":
     app.run(debug=True)
+
