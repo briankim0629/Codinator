@@ -65,17 +65,35 @@ function StyleSelection() {
   const styles = ["Formal", "Casual", "Athletic", "Any"];
   const navigate = useNavigate();
 
-  const handleStart = () => {
-    navigate("/outcome");
-    };
-    
-    const handleStyleChange = (style) => {
-        if (selectedStyle === style) {
-            setSelectedStyle(""); 
-            return;
-        }
-        setSelectedStyle(style);
+  const handleStart = async () => {
+    try {
+        await fetch(`${process.env.REACT_APP_BACKEND_URL}/setStyle`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ style: selectedStyle }),
+        });
+        setSelectedStyle(""); // Reset the selected style after starting
+        navigate("/outcome");
+    } catch (error) {
+      console.error("Error during style selection:", error);
+      alert("An error occurred while starting. Please try again.");
+      return;
+        
+    } finally {
+      // Optionally, you can reset the selected style here if needed
+      setSelectedStyle("");
     }
+  };
+
+  const handleStyleChange = (style) => {
+    if (selectedStyle === style) {
+      setSelectedStyle("");
+      return;
+    }
+    setSelectedStyle(style);
+  };
 
   return (
     <Container>
