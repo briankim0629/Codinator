@@ -306,12 +306,14 @@ function Outcome() {
     
   const [modelUrl, setModelUrl] = useState(""); // State to hold the model URL if needed
   const location = useLocation();
-  const [modelUploaded, setModelUploaded] = useState(false);
+    const [modelUploaded, setModelUploaded] = useState(false);
+    const [ohNo, setOhNo] = useState(""); // State to track if the model upload failed
 
   const { outfits } = location.state || {};
     console.log(outfits);
-  useEffect(() => {
-    console.log("Recommended Outfit:", outfits);
+    useEffect(() => {
+      setModelUrl(outfits ? outfits["final_codi"] : ""); // Set the model URL from the outfits prop
+    // console.log("Recommended Outfit:", outfits);
   }, []);
   useEffect(() => {
     if (modelUploaded) { // When upload is successful
@@ -348,18 +350,20 @@ function Outcome() {
         alert("Error trying on clothes. Please try again.");
       }
     };
-  
+  setTimeout(() => {
+    fetchWearClothes();
+  }, 5000);
     // FIX: If the user has uploaded a model picture, wait 5 seconds before fetching.
-    if (modelUploaded) {
-      setTimeout(() => {
-        fetchWearClothes();
-      }, 5000);
-    } else {
-      // If no upload, call immediately (backend should return mannequin result)
-      //fetchWearClothes();
-      console.log("No model picture uploaded, using default mannequin image.");
-      setModelUrl(outfits["final_codi"]);  
-    }
+    // if (modelUploaded) {
+    //   setTimeout(() => {
+    //     fetchWearClothes();
+    //   }, 5000);
+    // } else {
+    //   // If no upload, call immediately (backend should return mannequin result)
+    //   //fetchWearClothes();
+    //   console.log("No model picture uploaded, using default mannequin image.");
+    //   setModelUrl(outfits["final_codi"]);  
+    // }
   };
 
   return (

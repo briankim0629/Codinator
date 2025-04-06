@@ -183,14 +183,28 @@ def dressup_time_human(imagetop, imagebottom,baseimg_loc):
             response_modalities=['Text', 'Image']
         )
     )
-    
+    for _ in range(2):
+        
+        if response.candidates[0].content:
+            break
+        print("oh no")
+        import time
+        time.sleep(4)
+        response = client.models.generate_content(
+            model="gemini-2.0-flash-exp-image-generation",
+            contents=contents,
+            config=types.GenerateContentConfig(
+                response_modalities=['Text', 'Image']
+            )
+        )
+        
 
     for part in response.candidates[0].content.parts:
         if part.text is not None:
             print(part.text)
         elif part.inline_data is not None:
-            image_data = base64.b64decode(part.inline_data.data)
-            image = PIL.Image.open(io.BytesIO(image_data))
+            # image_data = base64.b64decode(part.inline_data.data)
+            image = PIL.Image.open(io.BytesIO(part.inline_data.data))
             return image
             """
             push the image to supabase database
