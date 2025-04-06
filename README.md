@@ -7,7 +7,7 @@ backend: supabase (Hayeon Yun)
 
 APIs: python/flask, Google Gemini (Brian Kim)
 
-Prerequisites to run app: javascript, python
+Prerequisites to run app: javascript, python, gemini API keys and supabase keys (not uploaded here on public repo)
 
 
 ## Commands to run the frontend:
