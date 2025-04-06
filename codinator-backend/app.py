@@ -28,6 +28,7 @@ def upload_multiple():
         return jsonify({"error": "No files provided"}), 400
 
     files = request.files.getlist("files")
+    print(files)
     #bucket = request.form.get("bucket")
     results = []
 

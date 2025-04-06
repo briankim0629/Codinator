@@ -387,6 +387,7 @@ const { outfits } = location.state || {};
               bucket="models"
               variant="small"
               title="DROP YOUR PICTURE HERE"
+              
             />
           </GreenUpload>
         </GreenContainer>

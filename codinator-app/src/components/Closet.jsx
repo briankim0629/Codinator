@@ -184,7 +184,7 @@ function Closet() {
       
       <HeaderRow>
         <Title>YOUR CLOSET</Title>
-        <EditButton>Edit Closet</EditButton>
+        
       </HeaderRow>
 
       

@@ -6,8 +6,8 @@ import styled from "styled-components";
 
 // Container for the whole upload section
 const Container = styled.div`
-  max-width: ${({ variant }) => (variant === "small" ? "300px" : "600px")}; 
-  
+  max-width: ${({ variant }) => (variant === "small" ? "300px" : "600px")};
+
   margin: 0;
   padding: 20px;
   text-align: left;
@@ -17,9 +17,12 @@ const Container = styled.div`
 const Title = styled.h2`
   font-family: Rubik, sans-serif;
   font-weight: medium;
-  margin-top: ${({ variant }) => (variant === "small" ? "5px" : "10px")}; /* FIXED */
-  margin-bottom: ${({ variant }) => (variant === "small" ? "5px" : "10px")}; /* FIXED */
-  font-size: ${({ variant }) => (variant === "small" ? "18px" : "24px")}; /* FIXED */
+  margin-top: ${({ variant }) =>
+    variant === "small" ? "5px" : "10px"}; /* FIXED */
+  margin-bottom: ${({ variant }) =>
+    variant === "small" ? "5px" : "10px"}; /* FIXED */
+  font-size: ${({ variant }) =>
+    variant === "small" ? "18px" : "24px"}; /* FIXED */
 `;
 
 // White upload box container
@@ -28,9 +31,15 @@ const UploadBox = styled.div`
   border-radius: 15px;
   border: 1px solid #ccc;
   width: 100%;
-  max-width: ${({ variant }) => (variant === "small" ? "250px" : "465px")}; /* FIXED: For small variant, width is 250px */
+  max-width: ${({ variant }) =>
+    variant === "small"
+      ? "250px"
+      : "465px"}; /* FIXED: For small variant, width is 250px */
   background-color: white;
-  padding: ${({ variant }) => (variant === "small" ? "10px" : "20px")}; /* FIXED: Reduced padding for small variant */
+  padding: ${({ variant }) =>
+    variant === "small"
+      ? "10px"
+      : "20px"}; /* FIXED: Reduced padding for small variant */
   margin-top: 10px;
   /* FIXED: Reduced height for small variant from '150px' to '80px' to make it shorter */
   height: ${({ variant }) => (variant === "small" ? "130px" : "400px")};
@@ -39,11 +48,11 @@ const UploadBox = styled.div`
   justify-content: center;
 `;
 
-
 // Drag and drop area with a grey background
 const DragArea = styled.div`
   border: 2px dashed #ccc;
-  padding: ${({ variant }) => (variant === "small" ? "10px" : "20px")}; /* FIXED */
+  padding: ${({ variant }) =>
+    variant === "small" ? "10px" : "20px"}; /* FIXED */
   text-align: center;
   border-radius: 15px;
   cursor: pointer;
@@ -58,23 +67,28 @@ const DragArea = styled.div`
 
 // Image styling
 const DropImage = styled.img`
-  width: ${({ variant }) => (variant === "small" ? "40px" : "60px")}; /* FIXED */
-  height: ${({ variant }) => (variant === "small" ? "40px" : "60px")}; /* FIXED */
+  width: ${({ variant }) =>
+    variant === "small" ? "40px" : "60px"}; /* FIXED */
+  height: ${({ variant }) =>
+    variant === "small" ? "40px" : "60px"}; /* FIXED */
   margin-bottom: 0px;
 `;
 
 // Paragraph styling
 const Paragraph = styled.p`
   font-family: sans-serif;
-  margin-bottom: ${({ variant }) => (variant === "small" ? "5px" : "10px")}; /* FIXED */
-  font-size: ${({ variant }) => (variant === "small" ? "10px" : "14px")}; /* FIXED */
+  margin-bottom: ${({ variant }) =>
+    variant === "small" ? "5px" : "10px"}; /* FIXED */
+  font-size: ${({ variant }) =>
+    variant === "small" ? "10px" : "14px"}; /* FIXED */
 `;
 
 // Button group container
 const ButtonGroup = styled.div`
   display: flex;
   justify-content: flex-start;
-  margin-top: ${({ variant }) => (variant === "small" ? "10px" : "20px")}; /* FIXED */
+  margin-top: ${({ variant }) =>
+    variant === "small" ? "10px" : "20px"}; /* FIXED */
   color: #fff;
 `;
 
@@ -82,14 +96,17 @@ const ButtonGroup = styled.div`
 const ConfirmButton = styled.button`
   background-color: #000;
   color: white;
-  height: ${({ variant }) => (variant === "small" ? "35px" : "40px")}; /* FIXED */
-  width: ${({ variant }) => (variant === "small" ? "100px" : "120px")}; /* FIXED */
+  height: ${({ variant }) =>
+    variant === "small" ? "35px" : "40px"}; /* FIXED */
+  width: ${({ variant }) =>
+    variant === "small" ? "100px" : "120px"}; /* FIXED */
   border-radius: 20px;
   margin-right: 20px;
 
   text-align: center;
   font-family: Montserrat;
-  font-size: ${({ variant }) => (variant === "small" ? "14px" : "16px")}; /* FIXED */
+  font-size: ${({ variant }) =>
+    variant === "small" ? "14px" : "16px"}; /* FIXED */
   font-style: normal;
   font-weight: 600;
 
@@ -102,8 +119,10 @@ const ConfirmButton = styled.button`
 const CancelButton = styled.button`
   background-color: white;
   color: black;
-  height: ${({ variant }) => (variant === "small" ? "35px" : "40px")}; /* FIXED */
-  width: ${({ variant }) => (variant === "small" ? "100px" : "120px")}; /* FIXED */
+  height: ${({ variant }) =>
+    variant === "small" ? "35px" : "40px"}; /* FIXED */
+  width: ${({ variant }) =>
+    variant === "small" ? "100px" : "120px"}; /* FIXED */
   border-radius: 20px;
   margin-right: 20px;
   cursor: pointer;
@@ -114,7 +133,8 @@ const CancelButton = styled.button`
 
   text-align: center;
   font-family: Montserrat;
-  font-size: ${({ variant }) => (variant === "small" ? "14px" : "16px")}; /* FIXED */
+  font-size: ${({ variant }) =>
+    variant === "small" ? "14px" : "16px"}; /* FIXED */
   font-style: normal;
   font-weight: 600;
 `;
@@ -156,14 +176,18 @@ function Upload({ bucket, variant, title }) {
       return;
     }
     const formData = new FormData();
-      formData.append("files", file);
-      formData.append("bucket", bucket); // Append the bucket name to FormData
+    formData.append("files", file);
+    formData.append("bucket", bucket); // Append the bucket name to FormData
     try {
+      const endpoint =
+        typeof variant === "string" && variant === "small"
+          ? "/upload-model"
+          : "/upload-multiple";
       const response = await fetch(
-        `${process.env.REACT_APP_BACKEND_URL}/upload-multiple`,
+        `${process.env.REACT_APP_BACKEND_URL}/${endpoint}`, // Use the correct endpoint based on the bucket
         {
           method: "POST",
-          body: formData, // Append the file to FormData
+          body: formData,
         }
       );
       if (!response.ok) {
@@ -223,7 +247,9 @@ function Upload({ bucket, variant, title }) {
       )}
 
       <ButtonGroup variant={variant}>
-        <ConfirmButton variant={variant} onClick={handleUpload}>Upload</ConfirmButton>
+        <ConfirmButton variant={variant} onClick={handleUpload}>
+          Upload
+        </ConfirmButton>
         <CancelButton
           variant={variant}
           onClick={() => {
