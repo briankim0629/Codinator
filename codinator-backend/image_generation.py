@@ -133,7 +133,7 @@ def dressup_time(top_url, bottom_url):
     if first_part.inline_data:
         # raw_bytes = base64.b64decode(first_part.inline_data.data)
         img = PIL.Image.open(io.BytesIO(first_part.inline_data.data))
-        img.show()
+        
         return img
     
 def dressup_time_human(imagetop, imagebottom,baseimg_loc):
