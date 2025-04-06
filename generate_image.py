@@ -9,10 +9,6 @@ from pillow_heif import register_heif_opener
 import base64
 register_heif_opener()
 
-supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
-
-client = genai.Client(api_key="AIzaSyA9J6aFkMpRJ9gFvRxTa2RE58HL_JfEvGU")
-
 def format_item_text(item):
     item_id = item.get("id", "unknown")
     metadata = item.get("metadata", {})
@@ -39,7 +35,10 @@ def recommend_outfit_multimodal(tops_list, bottoms_list, outerwear_list, context
         contents.append(f"### {label.upper()} ###")
         for item in items.data:
             response = requests.get(item.get('image_url'))
-            image = PIL.Image.open(io.BytesIO(response.content))
+            try:
+                image = PIL.Image.open(io.BytesIO(response.content))
+            except:
+                print(response.content)
             contents.append(image)
             # contents.append(f"Image URL: {item.get('image_url', 'No image available')}")
             contents.append(format_item_text(item))
@@ -82,6 +81,7 @@ top_recommended = supabase.table("image_text").select("*").eq("id", temp3['outfi
 bottom_recommended = supabase.table("image_text").select("*").eq("id", temp3['outfit']['bottom_id']).execute()
 outerwear_recommended = supabase.table("image_text").select("*").eq("id", temp3['outfit']['outerwear_id']).execute()
 
+
 response = requests.get(top_recommended.data[0].get('image_url'))
 imagetop = PIL.Image.open(io.BytesIO(response.content))
 response = requests.get(bottom_recommended.data[0].get('image_url'))
@@ -90,35 +90,41 @@ response = requests.get(outerwear_recommended.data[0].get('image_url'))
 imageouter = PIL.Image.open(io.BytesIO(response.content))
 
 
-def dressup_time(top_recommended, bottom_recommended, outwear_recommended):
+def dressup_time(imagetop, imagebottom):
     # base_text = "Generate an image of this man with the following clothes: a top (second image), bottoms (third image), and outerwear (fourth image). Place each item appropriately on his body.Make sure to dress the manequinn with ALL pieces of clothing provided"
+    
     # base_text = "Generate an image of this man with the following clothes: a top (second image), bottoms (third image). Place each item appropriately on his body.Make sure to dress the manequinn with ALL pieces of clothing provided"
-    base_text = "Generate an image of a man wearing ALL of these exact clothing items: 1) the shirt/top from image #2, 2) the pants/bottoms from image #3, and 3) the jacket/outerwear from image #4. The manequinn in image #1 must be completely dressed with ALL THREE clothing items properly placed on his body. It is ESSENTIAL that the pants/bottoms are clearly visible and properly worn."
-    base_image = PIL.Image.open('./human.png')
-    
-    def get_clothing_image(recommended):
-        response = requests.get(recommended.data[0].get('image_url'))
-        return PIL.Image.open(io.BytesIO(response.content))
-    
-    top_image = get_clothing_image(top_recommended)
-    bottom_image = get_clothing_image(bottom_recommended)
-    outwear_image = get_clothing_image(outwear_recommended)
-    
-    # contents = [
-    #     {"text": base_text},
-    #     {"image": base_image},
-    #     {"text": "Top clothing item:"},
-    #     {"image": top_image},
-    #     {"text": "Bottom clothing item:"},
-    #     {"image": bottom_image},
-    #     {"text": "Outerwear item:"},
-    #     {"image": outwear_image}
-    # ]
-    contents = [base_text,base_image,
+    # base_text = "Geneerate an image of these clothes with a clear background,not overlapped"
+    # base_text = (
+    #     # "Create one **photo‑realistic flat‑lay** image on a clean, neutral studio background.  \n"
+    #     # "• Arrange the two garments from the reference images below so they are **fully visible and do not overlap**.  \n"
+    #     # "   1. Shirt / top – image #1  \n"
+    #     # "   2. Pants / bottoms – image #2  \n"
+    #     # "• Lay them neatly (not folded), keeping natural scale and straight orientation.  \n"
+    #     # "Return only one final image"
+    #     "show me both of these clothes in one image, not folded"
+    # )
+    base_text = (
+        "Generate a realistic image of a **standing mannequin** wearing two pieces of clothing from the images below.  \n"
+        "• The mannequin should be front-facing, with arms at its sides and legs slightly apart.  \n"
+        "• Carefully place each clothing item in the correct position on the mannequin’s body:  \n"
+        "   1. Shirt or Top (Image #1) — should go on the upper body  \n"
+        "   2. Pants or Bottoms (Image #2) — should go on the lower body  \n"
+        "• Do **not overlap** the top and bottoms unnaturally — both should be clearly visible and fit naturally.  \n"
+        "• Ensure realistic proportions and a clean studio background.  \n"
+        "Return only the final image, with no extra objects or text."
+    )
+    # base_image = PIL.Image.open('./human.jpeg')
+    top_image = imagetop
+    bottom_image = imagebottom
+
+    contents = [
+                # base_text,base_image,
+                base_text,
                 'Top clothing item:', top_image,
                 'Bottom clothing item:', bottom_image,
-                'Outerwear item:',outwear_image,
-    ]
+                # 'Outerwear item:',outwear_image,
+                ]
     
     response = client.models.generate_content(
         model="gemini-2.0-flash-exp-image-generation",
@@ -138,4 +144,119 @@ def dressup_time(top_recommended, bottom_recommended, outwear_recommended):
             # image.save('gemini-native-image.png')
             image.show()
 
-dressup_time(top_recommended, bottom_recommended,outerwear_recommended)
+
+dressup_time(imagetop, imagebottom)
+
+def dressup_time_human(imagetop, imagebottom):
+    base_text = (
+        "Generate a realistic image of the person in the first photo, wearing two clothing items from the reference images below.  \n"
+        "The Person should be front-facing, with arms at its sides and legs slightly apart."
+        "• Apply the clothing items naturally and realistically:  \n"
+        "   1. Shirt or Top (Image #2) — place on the upper body  \n"
+        "   2. Pants or Bottoms (Image #3) — place on the lower body  \n"
+        "• The clothes should be well-fitted, aligned with the body, and **not overlap unnaturally**.  \n"
+        "• Maintain realistic lighting and shadows. Avoid adding any extra objects, backgrounds, or people.  \n"
+        "Return only the final image of the person's full body wearing both garments."
+    )
+
+    # base_text = (
+    #     "Create **one full‑body, front‑facing, photo‑realistic image** of the person in **image #1**.  \n"
+    #     "• Keep the same pose: arms relaxed at the sides, legs slightly apart.  \n"
+    #     "• Dress the person in **both** garments below and nothing else:  \n"
+    #     "   1. **Top / shirt** – image #2 (fit naturally on the torso, buttons closed if present)  \n"
+    #     "   2. **Pants / bottoms** – image #3 (waistband at the natural waist, legs straight, fully visible)  \n"
+    #     "• The clothing must be well‑fitted, with no clipping, warping, or unnatural overlap.  \n"
+    #     "• Preserve realistic lighting and shadows that match the person’s original lighting.  \n"
+    #     "• Use a clean, neutral studio backdrop (or the original plain backdrop from image #1).  \n"
+    #     "• Do **not** add extra objects, text, or additional people.  \n"
+    #     "Return only the final dressed image—no captions or other output."
+    # )
+
+    base_image = PIL.Image.open('./karina.jpeg')
+
+    top_image = imagetop
+    bottom_image = imagebottom
+
+    contents = [
+                base_text, 'Image of the person:',base_image,
+                'Top clothing item:', top_image,
+                'Bottom clothing item:', bottom_image,
+                ]
+    
+    response = client.models.generate_content(
+        model="gemini-2.0-flash-exp-image-generation",
+        contents=contents,
+        config=types.GenerateContentConfig(
+            response_modalities=['Text', 'Image']
+        )
+    )
+    
+
+    for part in response.candidates[0].content.parts:
+        if part.text is not None:
+            print(part.text)
+        elif part.inline_data is not None:
+            image_data = base64.b64decode(part.inline_data.data)
+            image = PIL.Image.open(io.BytesIO(image_data))
+            # image.save('gemini-native-image.png')
+            image.show()
+
+
+def dressup_time_human(imagetop, imagebottom,baseimg_loc):
+    base_text = (
+        "Generate a realistic image of the person in the first photo, wearing two clothing items from the reference images below.  \n"
+        "The Person should be front-facing, with arms at its sides and legs slightly apart."
+        "• Apply the clothing items naturally and realistically:  \n"
+        "   1. Shirt or Top (Image #2) — place on the upper body  \n"
+        "   2. Pants or Bottoms (Image #3) — place on the lower body  \n"
+        "• The clothes should be well-fitted, aligned with the body, and **not overlap unnaturally**.  \n"
+        "• Maintain realistic lighting and shadows. Avoid adding any extra objects, backgrounds, or people.  \n"
+        "Return only the final image of the person's full body wearing both garments."
+    )
+
+    # base_text = (
+    #     "Create **one full‑body, front‑facing, photo‑realistic image** of the person in **image #1**.  \n"
+    #     "• Keep the same pose: arms relaxed at the sides, legs slightly apart.  \n"
+    #     "• Dress the person in **both** garments below and nothing else:  \n"
+    #     "   1. **Top / shirt** – image #2 (fit naturally on the torso, buttons closed if present)  \n"
+    #     "   2. **Pants / bottoms** – image #3 (waistband at the natural waist, legs straight, fully visible)  \n"
+    #     "• The clothing must be well‑fitted, with no clipping, warping, or unnatural overlap.  \n"
+    #     "• Preserve realistic lighting and shadows that match the person’s original lighting.  \n"
+    #     "• Use a clean, neutral studio backdrop (or the original plain backdrop from image #1).  \n"
+    #     "• Do **not** add extra objects, text, or additional people.  \n"
+    #     "Return only the final dressed image—no captions or other output."
+    # )
+
+    base_image = PIL.Image.open(baseimg_loc)
+
+    top_image = imagetop
+    bottom_image = imagebottom
+
+    contents = [
+                base_text, 'Image of the person:',base_image,
+                'Top clothing item:', top_image,
+                'Bottom clothing item:', bottom_image,
+                ]
+    
+    response = client.models.generate_content(
+        model="gemini-2.0-flash-exp-image-generation",
+        contents=contents,
+        config=types.GenerateContentConfig(
+            response_modalities=['Text', 'Image']
+        )
+    )
+    
+
+    for part in response.candidates[0].content.parts:
+        if part.text is not None:
+            print(part.text)
+        elif part.inline_data is not None:
+            image_data = base64.b64decode(part.inline_data.data)
+            image = PIL.Image.open(io.BytesIO(image_data))
+            """
+            push the image to supabase database
+            """
+            # image.save('gemini-native-image.png')
+            image.show()
+
+dressup_time_human(imagetop, imagebottom,'./karina.jpeg')
