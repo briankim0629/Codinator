@@ -132,8 +132,8 @@ def dressup_time(top_url, bottom_url):
         if part.text is not None:
             print(part.text)
         elif part.inline_data is not None:
-            image_data = base64.b64decode(part.inline_data.data)
-            image = PIL.Image.open(io.BytesIO(image_data))
+            # image_data = base64.b64decode(part.inline_data.data)
+            image = PIL.Image.open(io.BytesIO(part.inline_data.data))
             # image.save('gemini-native-image.png')
             return image
         
