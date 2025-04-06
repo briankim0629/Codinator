@@ -1,8 +1,14 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+import { createClient } from "@supabase/supabase-js";
+
 import "@fontsource/montserrat/700.css"; // Importing Montserrat font for styling
 import "@fontsource/rubik"; // Importing Rubik font for bold text
 import "@fontsource/inter"; // Importing Lato font for category labels
+
+const supabaseUrl = process.env.REACT_APP_SUPABASE_URL;
+const supabaseKey = process.env.REACT_APP_SUPABASE_KEY;
+const supabase = createClient(supabaseUrl, supabaseKey);
 
 const ClosetContainer = styled.div`
   flex: 1;
@@ -45,7 +51,7 @@ const EditButton = styled.button`
   width: 170px;
   
   text-align: center;
-  font-family: Montserrat;
+  font-family: Montserrat, sans-serif;
   font-size: 16px;
   font-style: normal;
   font-weight: 600;
@@ -113,14 +119,22 @@ const ClosetItem = styled.div`
   aspect-ratio: 1;
   background-color: #f5f5f5;
   border-radius: 4px;
+  overflow: hidden; 
   display: flex;
   justify-content: center;
   align-items: center;
   font-family: Inter, sans-serif;
   color: #999;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
 `;
 
 function Closet() {
+  /*
   const closetItems = [
     { category: "Outerwear", image: "https://via.placeholder.com/150", tagColor: "#C0392B" },
     { category: "Top", image: "https://via.placeholder.com/150", tagColor: "#4C9A2A" },
@@ -129,6 +143,33 @@ function Closet() {
     { category: "Top", image: "https://via.placeholder.com/150", tagColor: "#4C9A2A" },
     { category: "Bottom", image: "https://via.placeholder.com/150", tagColor: "#2E266E" },
   ];
+  */
+  const [closetItems, setClosetItems] = useState([]);
+  useEffect(() => {
+    // Replace with your actual backend endpoint URL that returns the closet items.
+    async function fetchImages() {
+      const { data, error } = await supabase
+        .from("image_text")
+        .select("*");
+      if (error) {
+        console.error("Error fetching images:", error);
+      } else {
+        console.log("Fetched images from Supabase:", data);
+        setClosetItems(data);
+      }
+    }
+    fetchImages();
+  }, []);
+
+  // Helper function to determine tag color based on the image type.
+  const getTagColor = (type) => {
+    if (type === "Outerwear") return "#C0392B";
+    if (type === "Top") return "#4C9A2A";
+    if (type === "Bottom") return "#2E266E";
+    return "#333";
+  };
+
+
   return (
     <ClosetContainer>
       
@@ -150,8 +191,8 @@ function Closet() {
         <ItemsGrid>
           {closetItems.map((item, index) => (
               <ClosetItem key={index}>
-                <CategoryTag color={item.tagColor}>{item.category}</CategoryTag>
-                <img src={item.image} alt={item.category} />
+                <CategoryTag color={getTagColor(item.types)}>{item.types}</CategoryTag>
+                <img src={item.image_url} alt={item.types} />
               </ClosetItem>
             ))}
         </ItemsGrid>
