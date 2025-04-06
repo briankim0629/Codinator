@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+
 import "@fontsource/montserrat/700.css"; // Importing Montserrat font for styling
 import "@fontsource/rubik"; // Importing Rubik font for bold text
 import "@fontsource/inter"; // Importing Lato font for category labels
+
 
 const ClosetContainer = styled.div`
   flex: 1;
@@ -45,7 +47,7 @@ const EditButton = styled.button`
   width: 170px;
   
   text-align: center;
-  font-family: Montserrat;
+  font-family: Montserrat, sans-serif;
   font-size: 16px;
   font-style: normal;
   font-weight: 600;
@@ -113,14 +115,22 @@ const ClosetItem = styled.div`
   aspect-ratio: 1;
   background-color: #f5f5f5;
   border-radius: 4px;
+  overflow: hidden; 
   display: flex;
   justify-content: center;
   align-items: center;
   font-family: Inter, sans-serif;
   color: #999;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
 `;
 
 function Closet() {
+  /*
   const closetItems = [
     { category: "Outerwear", image: "https://via.placeholder.com/150", tagColor: "#C0392B" },
     { category: "Top", image: "https://via.placeholder.com/150", tagColor: "#4C9A2A" },
@@ -129,6 +139,46 @@ function Closet() {
     { category: "Top", image: "https://via.placeholder.com/150", tagColor: "#4C9A2A" },
     { category: "Bottom", image: "https://via.placeholder.com/150", tagColor: "#2E266E" },
   ];
+  */
+  const [closetItems, setClosetItems] = useState([]);
+
+  useEffect(() => {
+    async function fetchClosetItems() {
+      const categories = ["Tops", "Bottoms", "Outerwear"];
+      try {
+        // Fetch items for each category from your backend
+        const fetchPromises = categories.map((category) =>
+          fetch(
+            `${process.env.REACT_APP_BACKEND_URL}/get-clothing-items?category=${category}`
+          ).then((res) => {
+            if (!res.ok) {
+              throw new Error(`Failed to fetch items for ${category}`);
+            }
+            return res.json();
+          })
+        );
+        const results = await Promise.all(fetchPromises);
+        // Flatten the array of arrays into one array
+        const combinedItems = results.flat();
+        console.log("Fetched closet items:", combinedItems);
+        setClosetItems(combinedItems);
+      } catch (error) {
+        console.error("Error fetching closet items:", error);
+      }
+    }
+    fetchClosetItems();
+  }, []);
+
+
+  // Helper function to determine tag color based on the image type.
+  const getTagColor = (type) => {
+    if (type === "Outerwear") return "#C0392B";
+    if (type === "Top") return "#4C9A2A";
+    if (type === "Bottom") return "#2E266E";
+    return "#333";
+  };
+
+
   return (
     <ClosetContainer>
       
@@ -150,8 +200,8 @@ function Closet() {
         <ItemsGrid>
           {closetItems.map((item, index) => (
               <ClosetItem key={index}>
-                <CategoryTag color={item.tagColor}>{item.category}</CategoryTag>
-                <img src={item.image} alt={item.category} />
+                <CategoryTag color={getTagColor(item.types)}>{item.types}</CategoryTag>
+                <img src={item.image_url} alt={item.types} />
               </ClosetItem>
             ))}
         </ItemsGrid>
