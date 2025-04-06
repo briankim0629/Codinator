@@ -54,7 +54,7 @@ def recommend_outfit_multimodal(context):
     add_items_to_contents("outerwear", outerwear_list)
     
     response = client.models.generate_content(
-        model="gemini-1.5-pro",
+        model="gemini-2.0-flash-exp-image-generation",
         contents=contents,
         config=types.GenerateContentConfig(response_modalities=["Text"])
     )
@@ -128,15 +128,14 @@ def dressup_time(top_url, bottom_url):
     )
     
 
-    for part in response.candidates[0].content.parts:
-        if part.text is not None:
-            print(part.text)
-        elif part.inline_data is not None:
-            image_data = base64.b64decode(part.inline_data.data)
-            image = PIL.Image.open(io.BytesIO(image_data))
-            # image.save('gemini-native-image.png')
-            return image
-        
+    parts = response.candidates[0].content.parts
+    first_part  = parts[0]
+    if first_part.inline_data:
+        # raw_bytes = base64.b64decode(first_part.inline_data.data)
+        img = PIL.Image.open(io.BytesIO(first_part.inline_data.data))
+        img.show()
+        return img
+    
 def dressup_time_human(imagetop, imagebottom,baseimg_loc):
     base_text = (
         "Generate a realistic image of the person in the first photo, wearing two clothing items from the reference images below.  \n"

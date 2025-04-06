@@ -63,13 +63,16 @@ const StartButton = styled.button`
 
 function StyleSelection() {
   const [selectedStyle, setSelectedStyle] = useState("");
-  const styles = ["Formal", "Casual", "Athletic", "Any"];
+  const styles = ["formal", "casual", "athletic", "any"];
   const navigate = useNavigate();
 
   const handleStart = async () => {
-    try {
+      try {
+          if (!selectedStyle) {
+              setSelectedStyle("any"); // Reset the selected style if no style is selected
+          }
       const response = await fetch(
-        `${process.env.REACT_APP_BACKEND_URL}/setStyle`,
+        `${process.env.REACT_APP_BACKEND_URL}/get-rec`,
         {
           method: "POST",
           headers: {
@@ -81,6 +84,7 @@ function StyleSelection() {
       if (response.ok) {
           setSelectedStyle(""); // Reset the selected style after starting
           const outfitData = await response.json();
+          console.log("Outfit data received:", outfitData);
         navigate("/outcome", { state: { outfits: outfitData } });
       }
     } catch (error) {
