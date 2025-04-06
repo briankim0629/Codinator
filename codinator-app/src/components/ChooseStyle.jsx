@@ -125,7 +125,7 @@ function StyleSelection() {
         ))}
       </ButtonGroup>
 
-      <StartButton onClick={handleStart}>START</StartButton>
+      <StartButton onClick={handleStart}>START CODINATOR!</StartButton>
     </Container>
   );
 }
