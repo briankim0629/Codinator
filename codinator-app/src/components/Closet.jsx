@@ -25,6 +25,7 @@ const HeaderRow = styled.div`
 const Title = styled.h2`
   color: #2d2f92; 
   margin: 0;
+  margin-left: -30px;
   font-size: 40px;
   font-family: "Montserrat", sans-serif;
   color: var(--Blue, #2E266E);
@@ -41,8 +42,13 @@ const EditButton = styled.button`
   border-radius: 20px;
   padding: 10px 20px;
   cursor: pointer;
-  font-size: 14px;
-  font-family: Rubik;
+  width: 170px;
+  
+  text-align: center;
+  font-family: Montserrat;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
 
   &:hover {
     background-color: #5C53A0; /* Lighter hover color */
@@ -60,7 +66,7 @@ const CategoryLabel = styled.span`
   align-items: center;     /* Vertically centers the text */
   justify-content: flex-start;  /* Align text to the left */
   min-width: 87px;
-  height: 32px;            /* Increase height for better balance */
+  height: 28px;            /* Increase height for better balance */
   padding: 0 12px;         /* Horizontal padding only */
   color: #fff;
   font-family: Inter, sans-serif;
@@ -83,23 +89,23 @@ const CategoryTag = styled.div`
 `;
 
 const ItemsContainer = styled.div`
-  background-color: #fff;
+  background-color: #E8E8E8;
   border-radius: 10px;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-  padding: 20px;
+  padding: 60px;
   overflow-y: auto;
-  max-height: 400px; /* Adjust as needed */
+  max-height: 500px; /* Adjust as needed */
 `;
 
 const ItemsGrid = styled.div`
   display: grid;
-  grid-template-columns: repeat(3, 1fr); /* 3 columns, adjust as needed */
-  gap: 20px;
+  grid-template-columns: repeat(3, auto); /* 3 columns, adjust as needed */
+  gap: 40px;
 `;
 
 const ClosetItem = styled.div`
   position: relative;
-  width: 100%;
+  width: 80%;
   aspect-ratio: 1;
   background-color: #f5f5f5;
   border-radius: 4px;
@@ -123,7 +129,7 @@ function Closet() {
       <CategoryRow>
         <CategoryLabel color="#C0392B">Outerwear</CategoryLabel>
         <CategoryLabel color="#4C9A2A">Top</CategoryLabel>
-        <CategoryLabel color="#2d2f92">Bottom</CategoryLabel>
+        <CategoryLabel color="#2E266E">Bottom</CategoryLabel>
       </CategoryRow>
 
       
