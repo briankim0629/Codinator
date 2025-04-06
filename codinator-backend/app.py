@@ -168,7 +168,8 @@ def wear_clothes():
 
 @app.route("/get-rec", methods=["POST"])
 def get_rec():
-    prompt = request.args.get("style")
+    data = request.get_json()
+    prompt = data.get("style")
     temp3 = recommend_outfit_multimodal(prompt)
 
     try:
