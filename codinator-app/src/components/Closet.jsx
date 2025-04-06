@@ -78,11 +78,15 @@ const CategoryLabel = styled.span`
 const CategoryTag = styled.div`
   position: absolute;
   top: 10px;
+  
   left: -10px; /* negative left to push it out */
   background-color: ${({ color }) => color || "#333"};
   color: white;
+  min-width: 87px;
+  height: 14px;  
   font-family: Inter, sans-serif;
   font-size: 12px;
+  text-align: left;
   padding: 4px 8px;
   border-radius: 4px;
   z-index: 2;
@@ -117,6 +121,14 @@ const ClosetItem = styled.div`
 `;
 
 function Closet() {
+  const closetItems = [
+    { category: "Outerwear", image: "https://via.placeholder.com/150", tagColor: "#C0392B" },
+    { category: "Top", image: "https://via.placeholder.com/150", tagColor: "#4C9A2A" },
+    { category: "Bottom", image: "https://via.placeholder.com/150", tagColor: "#2E266E" },
+    { category: "Outerwear", image: "https://via.placeholder.com/150", tagColor: "#C0392B" },
+    { category: "Top", image: "https://via.placeholder.com/150", tagColor: "#4C9A2A" },
+    { category: "Bottom", image: "https://via.placeholder.com/150", tagColor: "#2E266E" },
+  ];
   return (
     <ClosetContainer>
       
@@ -136,12 +148,12 @@ function Closet() {
       
       <ItemsContainer>
         <ItemsGrid>
-          <ClosetItem>Outerwear</ClosetItem>
-          <ClosetItem>Top</ClosetItem>
-          <ClosetItem>Bottom</ClosetItem>
-          <ClosetItem>Outerwear</ClosetItem>
-          <ClosetItem>Top</ClosetItem>
-          <ClosetItem>Bottom</ClosetItem>
+          {closetItems.map((item, index) => (
+              <ClosetItem key={index}>
+                <CategoryTag color={item.tagColor}>{item.category}</CategoryTag>
+                <img src={item.image} alt={item.category} />
+              </ClosetItem>
+            ))}
         </ItemsGrid>
       </ItemsContainer>
     </ClosetContainer>
