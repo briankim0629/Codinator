@@ -10,7 +10,7 @@ from pillow_heif import register_heif_opener
 import base64
 register_heif_opener()
 
-client = genai.Client(api_key="AIzaSyA9J6aFkMpRJ9gFvRxTa2RE58HL_JfEvGU")
+client = genai.Client(api_key="AIzaSyDvPVc26ly8W98hVioHHYkY5oulcxodxNE")
 
 def format_item_text(item):
     item_id = item.get("id", "unknown")
@@ -161,10 +161,14 @@ def dressup_time_human(imagetop, imagebottom,baseimg_loc):
     #     "Return only the final dressed image—no captions or other output."
     # )
 
-    base_image = PIL.Image.open(baseimg_loc)
+    response = requests.get(imagetop)
+    top_image = PIL.Image.open(io.BytesIO(response.content))
+    response = requests.get(imagebottom)
+    bottom_image = PIL.Image.open(io.BytesIO(response.content))
+    response = requests.get(baseimg_loc)
+    base_image = PIL.Image.open(io.BytesIO(response.content))
 
-    top_image = imagetop
-    bottom_image = imagebottom
+
 
     contents = [
                 base_text, 'Image of the person:',base_image,
@@ -187,8 +191,9 @@ def dressup_time_human(imagetop, imagebottom,baseimg_loc):
         elif part.inline_data is not None:
             image_data = base64.b64decode(part.inline_data.data)
             image = PIL.Image.open(io.BytesIO(image_data))
+            return image
             """
             push the image to supabase database
             """
             # image.save('gemini-native-image.png')
-            image.show()
+            # image.show()

@@ -10,47 +10,89 @@
     button {
       padding: 10px 20px;
       font-size: 16px;
+      margin-right: 10px;
     }
     #result {
-      margin-top: 20px;
+      margin-top: 30px;
+    }
+    img {
+      max-width: 200px;
+      margin-bottom: 10px;
     }
   </style>
 </head>
 <body>
   <h1>Outfit Recommender</h1>
-  <p>Click the button to get a top and bottom clothing recommendation.</p>
-  <button id="recBtn">Get Recommendation</button>
+  <p>Click to generate outfits on a mannequin or a human model:</p>
+
+  <button id="recBtn">👕 Get Mannequin Recommendation</button>
+  <button id="humanBtn">🧍 Generate Human Model Wearing Outfit</button>
+
   <div id="result"></div>
 
   <script>
-    document.getElementById("recBtn").addEventListener("click", function () {
-      const resultDiv = document.getElementById("result");
-      resultDiv.innerHTML = "⏳ Getting recommendation...";
+    const resultDiv = document.getElementById("result");
 
-    fetch("http://127.0.0.1:5000/get-rec?TEMPORARY=test", {
-        method: "POST"
-    })
-      .then(async response => {
-        const data = await response.json();
-        if (response.ok) {
-          resultDiv.innerHTML = `
-            ✅ Recommendation received!<br><br>
-            <strong>Top:</strong><br>
-            <img src="${data.image_url_top}" alt="Top" width="200"><br>
-            <a href="${data.image_url_top}" target="_blank">View Full Image</a><br><br>
+    document.getElementById("recBtn").addEventListener("click", () => {
+      resultDiv.innerHTML = "⏳ Generating mannequin outfit...";
 
-            <strong>Bottom:</strong><br>
-            <img src="${data.image_url_bottom}" alt="Bottom" width="200"><br>
-            <a href="${data.image_url_bottom}" target="_blank">View Full Image</a><br>
-          `;
-        } else {
-          resultDiv.innerHTML = `❌ Server error: <code>${data.message}</code>`;
-        }
-      })
-      .catch(error => {
-        console.error("Fetch error:", error);
-        resultDiv.innerHTML = "❌ Network error: " + error.message;
-      });
+      fetch("http://127.0.0.1:5000/get-rec?style=test", { method: "POST" })
+        .then(async res => {
+          const data = await res.json();
+          if (res.ok) {
+            resultDiv.innerHTML = `
+              ✅ <strong>Mannequin outfit generated!</strong><br><br>
+              <strong>Top:</strong><br>
+              <img src="${data.image_url_top}" alt="Top"><br>
+              <a href="${data.image_url_top}" target="_blank">View Top</a><br><br>
+
+              <strong>Bottom:</strong><br>
+              <img src="${data.image_url_bottom}" alt="Bottom"><br>
+              <a href="${data.image_url_bottom}" target="_blank">View Bottom</a><br><br>
+
+              <strong>Mannequin Dressed Look:</strong><br>
+              <img src="${data.final_codi}" alt="Final Look"><br>
+              <a href="${data.final_codi}" target="_blank">View Full Outfit</a>
+            `;
+          } else {
+            resultDiv.innerHTML = `❌ Server error: <code>${data.message}</code>`;
+          }
+        })
+        .catch(err => {
+          console.error(err);
+          resultDiv.innerHTML = `❌ Network error: ${err.message}`;
+        });
+    });
+
+    document.getElementById("humanBtn").addEventListener("click", () => {
+      resultDiv.innerHTML = "⏳ Generating outfit on human model...";
+
+      fetch("http://127.0.0.1:5000/wear-clothes", { method: "POST" })
+        .then(async res => {
+          const data = await res.json();
+          if (res.ok) {
+            resultDiv.innerHTML = `
+              ✅ <strong>Outfit generated on human model!</strong><br><br>
+              <strong>Top:</strong><br>
+              <img src="${data.image_url_top}" alt="Top"><br>
+              <a href="${data.image_url_top}" target="_blank">View Top</a><br><br>
+
+              <strong>Bottom:</strong><br>
+              <img src="${data.image_url_bottom}" alt="Bottom"><br>
+              <a href="${data.image_url_bottom}" target="_blank">View Bottom</a><br><br>
+
+              <strong>Dressed Human:</strong><br>
+              <img src="${data.final_codi}" alt="Final Look"><br>
+              <a href="${data.final_codi}" target="_blank">View Full Look</a>
+            `;
+          } else {
+            resultDiv.innerHTML = `❌ Server error: <code>${data.message}</code>`;
+          }
+        })
+        .catch(err => {
+          console.error(err);
+          resultDiv.innerHTML = `❌ Network error: ${err.message}`;
+        });
     });
   </script>
 </body>
