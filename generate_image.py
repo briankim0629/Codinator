@@ -90,7 +90,7 @@ response = requests.get(outerwear_recommended.data[0].get('image_url'))
 imageouter = PIL.Image.open(io.BytesIO(response.content))
 
 
-def dressup_time(imagetop, imagebottom):
+def dressup_time():
     # base_text = "Generate an image of this man with the following clothes: a top (second image), bottoms (third image), and outerwear (fourth image). Place each item appropriately on his body.Make sure to dress the manequinn with ALL pieces of clothing provided"
     
     # base_text = "Generate an image of this man with the following clothes: a top (second image), bottoms (third image). Place each item appropriately on his body.Make sure to dress the manequinn with ALL pieces of clothing provided"
@@ -115,8 +115,22 @@ def dressup_time(imagetop, imagebottom):
         "Return only the final image, with no extra objects or text."
     )
     # base_image = PIL.Image.open('./human.jpeg')
-    top_image = imagetop
-    bottom_image = imagebottom
+    # top_image = imagetop
+    # bottom_image = imagebottom
+    supa = (
+        supabase
+        .table("codi_rec")
+        .select("*")
+        .order("created_at", desc=True)   # newest first
+        .limit(1)                         # only 1 row
+        .single()                         # return it as a dict instead of a list
+        .execute()
+    )
+
+    response = requests.get(supa.data.get('image_url-top'))
+    top_image = PIL.Image.open(io.BytesIO(response.content))
+    response = requests.get(supa.data.get('image_url-bottom'))
+    bottom_image = PIL.Image.open(io.BytesIO(response.content))
 
     contents = [
                 # base_text,base_image,
